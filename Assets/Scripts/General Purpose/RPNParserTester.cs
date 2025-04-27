@@ -1,0 +1,40 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+/// <summary>
+/// Simple tester for RPNParser. Attach this to a GameObject and test parsing expressions.
+/// </summary>
+public class RPNParserTester : MonoBehaviour
+{
+    void Start()
+    {
+        TestSimpleExpressions();
+        TestExpressionsWithVariables();
+    }
+
+    private void TestSimpleExpressions()
+    {
+        Debug.Log("==== Simple Tests ====");
+
+        Debug.Log("Test 1 (5 3 +): " + RPNParser.Instance.DoParse("5 3 +")); // Expected: 8
+        Debug.Log("Test 2 (10 2 /): " + RPNParser.Instance.DoParse("10 2 /")); // Expected: 5
+        Debug.Log("Test 3 (6 4 -): " + RPNParser.Instance.DoParse("6 4 -")); // Expected: 2
+        Debug.Log("Test 4 (3 5 *): " + RPNParser.Instance.DoParse("3 5 *")); // Expected: 15
+        Debug.Log("Test 5 (7 3 %): " + RPNParser.Instance.DoParse("7 3 %")); // Expected: 1
+    }
+
+    private void TestExpressionsWithVariables()
+    {
+        Debug.Log("==== Variable Tests ====");
+
+        var vars = new Dictionary<string, float>
+        {
+            { "base", 20 },
+            { "wave", 3 }
+        };
+
+        Debug.Log("Test 6 (base 5 wave * +): " + RPNParser.Instance.DoParse("base 5 wave * +", vars)); // Expected: 35
+        Debug.Log("Test 7 (base wave + 2 *): " + RPNParser.Instance.DoParse("base wave + 2 *", vars)); // (20+3)*2 = 46
+        Debug.Log("Test 8 (wave base /): " + RPNParser.Instance.DoParse("wave base /", vars)); // 3/20 = 0.15
+    }
+}
