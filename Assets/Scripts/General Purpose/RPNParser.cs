@@ -1,83 +1,112 @@
 
+//Author: Xavier Austin
 using UnityEngine;
 using System;
 using System.Collections.Generic;
 
 public class RPNParser : MonoBehaviour
 {
-    public static RPNParser Instance { get; private set; }
+	public static RPNParser Instance { get; private set; }
 
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(this.gameObject);
-    }
-
-    public float DoParse(string str, Dictionary<string, float> variables = null)
-    {
-        Stack<float> stack = new Stack<float>();
-        int length = str.Length;
-
-        for (int i = 0; i < length; i++)
-        {
-            if (str[i] == ' ')
-                continue;
-
-            string token = "";
-            // Read a token (until next space)
-            while (i < length && str[i] != ' ')
-            {
-                token += str[i];
-                i++;
+	void Awake()
+	{
+		if (Instance != null && Instance != this)
+		{
+			Destroy(this.gameObject);
+			return;
+		}
+		Instance = this;
+		DontDestroyOnLoad(this.gameObject);
+	}
+	
+	public float DoParse(string str, Dictionary<string, float> variables = null)
+	{
+		Stack<float> stack = new Stack<float>();
+		//super wasteful memory-wise but uh :)
+		Stack<bool> isIntStack = new Stack<bool>();
+  
+		//warning: extremely unoptimized (but super safe)
+		for (int i = 0; i < str.Length; i ++){
+			string	 substr = "";
+			bool	 isInt = true;
+			bool	 isFlt = false;
+			bool	 isVar = true;
+			bool	 isOpp = true;
+			float	 intFromStr = 0;
+			float	 fltFromStr = 0;
+			float	 fltDivisor = 1;
+			//tokenize
+			for (; (isInt || isFlt || isVar || isOpp) && (i < str.Length) && (str[i] != ' '); i ++){
+				char temp = str[i];
+				substr += temp;
+				//calculate the divisor for floating point number
+				if (isFlt)
+					fltDivisor *= 10;
+				isFlt &= (temp >= '0' && temp <= '9'); //looks wrong but effectively checks number of .s
+                //checks if the number is now a floating point number (also why above works properly)
+				if (temp == '.')
+					isFlt = isInt;
+				//check for validity of expression
+				isInt &= (temp >= '0' && temp <= '9');
+				isVar &= ((temp >= 'A' && temp <= 'Z') || (temp >= 'a' && temp <= 'z') || temp == '_');
+				isOpp &= (temp == '%' || temp == '+' || temp == '-' || temp == '*' || temp == '/');
+				//calculate the numerator/integer from string
+				if (temp != '.')
+                    intFromStr = intFromStr * 10 + (temp - '0');
+			}
+			if (!(isInt || isFlt || isVar || isOpp))
+				throw new ArgumentException("Invalid character at index ["+i+"] in expression \""+str+"\"");
+			fltFromStr = intFromStr / fltDivisor;
+			//push to stack
+			if (isVar){
+				if (!variables.ContainsKey(substr))
+				    throw new ArgumentException("Variable name \""+substr+"\" not in passed dictionary");
+				fltFromStr = variables[substr];
+				//if (var is int) isInt = true; unfortunate sacrifice of nuance made to the c# gods
+                //probably wont be important though
+			}
+			if (!isOpp){
+                isIntStack.Push(isInt);
+                stack.Push(fltFromStr);
+				continue;
             }
-            i--; // Because loop will increment again
-
-            if (IsOperator(token))
-            {
-                if (stack.Count < 2)
-                    throw new ArgumentException($"Too many operators or not enough operands in expression: \"{str}\"");
-
-                float b = stack.Pop();
-                float a = stack.Pop();
-
-                switch (token)
-                {
-                    case "+": stack.Push(a + b); break;
-                    case "-": stack.Push(a - b); break;
-                    case "*": stack.Push(a * b); break;
-                    case "/": stack.Push(a / b); break;
-                    case "%": stack.Push(a % b); break;
-                    default:
-                        throw new ArgumentException($"Unknown operator '{token}'.");
-                }
-            }
-            else if (variables != null && variables.ContainsKey(token))
-            {
-                stack.Push(variables[token]);
-            }
-            else if (float.TryParse(token, out float number))
-            {
-                stack.Push(number);
-            }
-            else
-            {
-                throw new ArgumentException($"Unknown token '{token}' in expression \"{str}\"");
-            }
-        }
-
-        if (stack.Count != 1)
-            throw new ArgumentException($"Malformed RPN expression: \"{str}\"");
-
-        return stack.Pop();
-    }
-
-    private bool IsOperator(string token)
-    {
-        return token == "+" || token == "-" || token == "*" || token == "/" || token == "%";
-    }
+			//evaluate
+			if (stack.Count < 2)
+				throw new ArgumentException("Too many opperators in expression \""+str+"\"");
+			float opperand1 = stack.Pop();
+			bool opp1Int = isIntStack.Pop();
+			float opperand0 = stack.Pop();
+			bool opp0Int = isIntStack.Pop();
+			switch (substr){
+				case ("+"):
+					stack.Push(opperand0+opperand1);
+                    isIntStack.Push(opp1Int && opp0Int);
+				break;
+				case ("-"):
+					stack.Push(opperand0-opperand1);
+                    isIntStack.Push(opp1Int && opp0Int);
+				break;
+				case ("/"):
+                    //implicit type casts from floats to ints when dividing by ints are actually absent from c#
+					if (opp1Int)
+						stack.Push(Convert.ToInt32(opperand0/opperand1));
+					else
+						stack.Push(opperand0/opperand1);
+                    isIntStack.Push(opp1Int);
+				break;
+				case ("*"):
+					stack.Push(opperand0*opperand1);
+                    isIntStack.Push(opp1Int && opp0Int);
+				break;
+				case ("%"):
+					stack.Push(opperand0%opperand1);
+                    isIntStack.Push(opp1Int && opp0Int);
+				break;
+				default:
+					throw new ArgumentException("Undefined opperator \""+substr+"\". Maybe expression is missing a space?");
+				break;
+			}
+		}
+		return stack.Pop();
+	}
 }
