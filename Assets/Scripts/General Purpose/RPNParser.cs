@@ -19,7 +19,6 @@ public class RPNParser : MonoBehaviour
 		DontDestroyOnLoad(this.gameObject);
 	}
 	
-	//not great practice imo but it allows for int and float returns which I like
 	public float DoParse(string str, Dictionary<string, float> variables = null)
 	{
 		Stack<float> stack = new Stack<float>();
@@ -32,9 +31,9 @@ public class RPNParser : MonoBehaviour
 			bool	 isInt = true;
 			bool	 isFlt = false;
 			bool	 isVar = true;
-			bool	 isOpp = false;
+			bool	 isOpp = true;
 			float	 intFromStr = 0;
-			float	fltFromStr = 0;
+			float	 fltFromStr = 0;
 			float	 fltDivisor = 1;
 			//tokenize
 			for (; (isInt || isFlt || isVar || isOpp) && (i < str.Length) && (str[i] != ' '); i ++){
@@ -43,17 +42,17 @@ public class RPNParser : MonoBehaviour
 				//calculate the divisor for floating point number
 				if (isFlt)
 					fltDivisor *= 10;
-				//check for validity of expression
-				isInt &= (temp >= '0' && temp <= '9');
 				isFlt &= (temp >= '0' && temp <= '9'); //looks wrong but effectively checks number of .s
-				isVar &= ((temp >= 'A' && temp <= 'Z') || (temp >= 'a' && temp <= 'z') || temp == '_');
-				isOpp &= (temp == '%' || temp == '+' || temp == '-' || temp == '*' || temp == '/');
-				//checks if the number is now a floating point number (also why line 45 works properly)
+                //checks if the number is now a floating point number (also why above works properly)
 				if (temp == '.')
 					isFlt = isInt;
+				//check for validity of expression
+				isInt &= (temp >= '0' && temp <= '9');
+				isVar &= ((temp >= 'A' && temp <= 'Z') || (temp >= 'a' && temp <= 'z') || temp == '_');
+				isOpp &= (temp == '%' || temp == '+' || temp == '-' || temp == '*' || temp == '/');
 				//calculate the numerator/integer from string
-				else
-					intFromStr = intFromStr * 10 + (temp - '0');
+				if (temp != '.')
+                    intFromStr = intFromStr * 10 + (temp - '0');
 			}
 			if (!(isInt || isFlt || isVar || isOpp))
 				throw new ArgumentException("Invalid character at index ["+i+"] in expression \""+str+"\"");
@@ -66,35 +65,42 @@ public class RPNParser : MonoBehaviour
 				//if (var is int) isInt = true; unfortunate sacrifice of nuance made to the c# gods
                 //probably wont be important though
 			}
-			isIntStack.Push(isInt);
-			stack.Push(fltFromStr);
-			if (!isOpp)
+			if (!isOpp){
+                isIntStack.Push(isInt);
+                stack.Push(fltFromStr);
 				continue;
+            }
 			//evaluate
 			if (stack.Count < 2)
 				throw new ArgumentException("Too many opperators in expression \""+str+"\"");
 			float opperand1 = stack.Pop();
 			bool opp1Int = isIntStack.Pop();
 			float opperand0 = stack.Pop();
-			/*bool opp0Int = */isIntStack.Pop();
+			bool opp0Int = isIntStack.Pop();
 			switch (substr){
 				case ("+"):
 					stack.Push(opperand0+opperand1);
+                    isIntStack.Push(opp1Int && opp0Int);
 				break;
 				case ("-"):
 					stack.Push(opperand0-opperand1);
+                    isIntStack.Push(opp1Int && opp0Int);
 				break;
 				case ("/"):
+                    //implicit type casts from floats to ints when dividing by ints are actually absent from c#
 					if (opp1Int)
-						stack.Push(opperand0/Convert.ToInt32(opperand1));
+						stack.Push(Convert.ToInt32(opperand0/opperand1));
 					else
 						stack.Push(opperand0/opperand1);
+                    isIntStack.Push(opp1Int);
 				break;
 				case ("*"):
 					stack.Push(opperand0*opperand1);
+                    isIntStack.Push(opp1Int && opp0Int);
 				break;
 				case ("%"):
 					stack.Push(opperand0%opperand1);
+                    isIntStack.Push(opp1Int && opp0Int);
 				break;
 				default:
 					throw new ArgumentException("Undefined opperator \""+substr+"\". Maybe expression is missing a space?");
