@@ -17,10 +17,19 @@ public class EnemySpawner : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GameObject selector = Instantiate(button, level_selector.transform);
-        selector.transform.localPosition = new Vector3(0, 130);
-        selector.GetComponent<MenuSelectorController>().spawner = this;
-        selector.GetComponent<MenuSelectorController>().SetLevel("Start");
+        //unity makes me dizzy; I actually don't understand what I'm doing here; glad it works though
+        GameObject selector0 = Instantiate(button, level_selector.transform);
+        selector0.transform.localPosition = new Vector3(0, 130);
+        selector0.GetComponent<MenuSelectorController>().spawner = this;
+        selector0.GetComponent<MenuSelectorController>().SetLevel("Easy");
+        GameObject selector1 = Instantiate(button, level_selector.transform);
+        selector1.transform.localPosition = new Vector3(0, 0);
+        selector1.GetComponent<MenuSelectorController>().spawner = this;
+        selector1.GetComponent<MenuSelectorController>().SetLevel("Medium");
+        GameObject selector2 = Instantiate(button, level_selector.transform);
+        selector2.transform.localPosition = new Vector3(0, -130);
+        selector2.GetComponent<MenuSelectorController>().spawner = this;
+        selector2.GetComponent<MenuSelectorController>().SetLevel("Hard");
     }
 
     // Update is called once per frame
@@ -55,13 +64,13 @@ public class EnemySpawner : MonoBehaviour
         GameManager.Instance.state = GameManager.GameState.INWAVE;
         for (int i = 0; i < 10; ++i)
         {
-            yield return SpawnZombie();
+            yield return SpawnEnemy();
         }
         yield return new WaitWhile(() => GameManager.Instance.enemy_count > 0);
         GameManager.Instance.state = GameManager.GameState.WAVEEND;
     }
 
-    IEnumerator SpawnZombie()
+    IEnumerator SpawnEnemy()
     {
         SpawnPoint spawn_point = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
         Vector2 offset = Random.insideUnitCircle * 1.8f;
