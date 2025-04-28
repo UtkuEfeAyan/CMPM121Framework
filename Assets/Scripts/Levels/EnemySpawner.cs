@@ -65,7 +65,6 @@ public class EnemySpawner : MonoBehaviour
 
     public void NextWave()
     {
-        waveNum ++;
         // if waves arn't specified assume endless otherwise use wave total
         if (levelJSON.waves == 0)
             StartCoroutine(SpawnWave());
@@ -109,16 +108,32 @@ public class EnemySpawner : MonoBehaviour
             }
         }
         yield return new WaitWhile(() => GameManager.Instance.enemy_count > 0);
+        waveNum ++;
         GameManager.Instance.state = GameManager.GameState.WAVEEND;
     }
 
     IEnumerator SpawnEnemies(SpawnData data)
     {
-        //wave is in waveNum but u have to get base from the enemiesJSON (it's alr loaded dw)
-        //i added great slime and slime with child classes that are spawned on death
-        //theres another enemy slate thats mostly just there bc i thought it'd be cool but we don't have to implement it
-        //feel free to remove one or all of the extra enemy types
-        //glhf :)
+        float  hp     = 0;
+        float  speed  = 0;
+        float  damage = 0;
+        int    sprite = 0;
+        int    childN = 0;
+        string child  = null;
+        string childW = null;
+        foreach (var enemyDisc in enemiesJSON){
+            if (data.enemy == enemyDisc.name){
+                Debug.Log(data.hp);
+                hp     = RPNParser.Instance.DoParse(data.hp,    new Dictionary<string, float>{{ "wave", waveNum }, {"base", enemyDisc.hp}});
+                speed  = RPNParser.Instance.DoParse(data.speed, new Dictionary<string, float>{{ "wave", waveNum }, {"base", enemyDisc.speed}});
+                damage = RPNParser.Instance.DoParse(data.damage,new Dictionary<string, float>{{ "wave", waveNum }, {"base", enemyDisc.damage}});
+                child  = enemyDisc.child; 
+                childW = enemyDisc.childWhen; 
+                childN = enemyDisc.childNum; 
+                sprite = enemyDisc.sprite;
+                Debug.Log($"{child}, {childW}, {childN}");
+            }
+        }
         
         SpawnPoint spawn_point = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
         Vector2 offset = Random.insideUnitCircle * 1.8f;
@@ -126,10 +141,13 @@ public class EnemySpawner : MonoBehaviour
         Vector3 initial_position = spawn_point.transform.position + new Vector3(offset.x, offset.y, 0);
         GameObject new_enemy = Instantiate(enemy, initial_position, Quaternion.identity);
 
-        new_enemy.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.enemySpriteManager.Get(0);
+        //sprite selector
+        new_enemy.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.enemySpriteManager.Get(sprite);
         EnemyController en = new_enemy.GetComponent<EnemyController>();
-        en.hp = new Hittable(50, Hittable.Team.MONSTERS, new_enemy);
-        en.speed = 10;
+        //stats
+        en.hp = new Hittable(hp, Hittable.Team.MONSTERS, new_enemy);
+        en.speed = speed;
+        en.damage = damage;
         GameManager.Instance.AddEnemy(new_enemy);
         yield return new WaitForSeconds(0.5f);
     }
