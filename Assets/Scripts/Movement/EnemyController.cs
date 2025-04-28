@@ -8,9 +8,11 @@ public class EnemyController : MonoBehaviour
     public float speed;
     public Hittable hp;
     public float damage;
+    public string child;
     public HealthBar healthui;
     public bool dead;
     public string onDeath;
+    public EnemySpawner spawner;
 
     public float last_attack;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -52,7 +54,11 @@ public class EnemyController : MonoBehaviour
         if (!dead)
         {
             dead = true;
-            ;
+            if (child != "" && child != null){
+                Debug.Log(child);
+                GameObject new_enemy = spawner.EnemyToSpawnByName(child);
+                GameManager.Instance.AddEnemy(new_enemy);
+            }
             GameManager.Instance.RemoveEnemy(gameObject);
             Destroy(gameObject);
         }

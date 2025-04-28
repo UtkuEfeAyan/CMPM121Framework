@@ -1,4 +1,4 @@
-//Editor: Xavier Austin (ui and level handling)
+//Editor: Xavier Austin (ui and level handling and enemy spawning)
 //Editor: Efe Ayan (enemy spawning)
 using UnityEngine;
 using Newtonsoft.Json.Linq;
@@ -82,7 +82,7 @@ public class EnemySpawner : MonoBehaviour
             GameManager.Instance.countdown--;
         }
         GameManager.Instance.state = GameManager.GameState.INWAVE;
-        //using system namespace brings up compile error bc system and unity each have their own random
+        //using system namespace brings up compile error bc system and unity each have their own random function
         //very fixable but i'm lazy!
         //if (levelJSON.spawns == null)
         //    throw new ArgumentException("levels.json is missing spawns for selected difficulty");
@@ -114,6 +114,16 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnEnemies(SpawnData data)
     {
+        GameObject new_enemy = EnemyToSpawnByName(data.enemy);
+        EnemyController en = new_enemy.GetComponent<EnemyController>();
+        en.hp = new Hittable(RPNParser.Instance.DoParse(data.hp, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.hp.hp}}), Hittable.Team.MONSTERS, new_enemy);
+        en.speed = RPNParser.Instance.DoParse(data.speed, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.speed}});
+        en.damage = RPNParser.Instance.DoParse(data.damage, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.damage}});
+        GameManager.Instance.AddEnemy(new_enemy);
+        yield return new WaitForSeconds(0.5f);
+    }
+
+    public GameObject EnemyToSpawnByName(string name){
         float  hp     = 0;
         float  speed  = 0;
         float  damage = 0;
@@ -122,16 +132,14 @@ public class EnemySpawner : MonoBehaviour
         string child  = null;
         string childW = null;
         foreach (var enemyDisc in enemiesJSON){
-            if (data.enemy == enemyDisc.name){
-                Debug.Log(data.hp);
-                hp     = RPNParser.Instance.DoParse(data.hp,    new Dictionary<string, float>{{ "wave", waveNum }, {"base", enemyDisc.hp}});
-                speed  = RPNParser.Instance.DoParse(data.speed, new Dictionary<string, float>{{ "wave", waveNum }, {"base", enemyDisc.speed}});
-                damage = RPNParser.Instance.DoParse(data.damage,new Dictionary<string, float>{{ "wave", waveNum }, {"base", enemyDisc.damage}});
+            if (name == enemyDisc.name){
+                hp     = enemyDisc.hp;
+                speed  = enemyDisc.speed;
+                damage = enemyDisc.damage;
                 child  = enemyDisc.child; 
                 childW = enemyDisc.childWhen; 
                 childN = enemyDisc.childNum; 
                 sprite = enemyDisc.sprite;
-                Debug.Log($"{child}, {childW}, {childN}");
             }
         }
         
@@ -148,8 +156,10 @@ public class EnemySpawner : MonoBehaviour
         en.hp = new Hittable(hp, Hittable.Team.MONSTERS, new_enemy);
         en.speed = speed;
         en.damage = damage;
-        GameManager.Instance.AddEnemy(new_enemy);
-        yield return new WaitForSeconds(0.5f);
+        en.child = child;
+        en.spawner = this;
+        Debug.Log(name);
+        return new_enemy;
     }
 
     uint GetWave(){
