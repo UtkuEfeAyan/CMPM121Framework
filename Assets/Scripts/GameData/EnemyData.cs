@@ -9,4 +9,7 @@ public class EnemyData
     public int hp;
     public float speed;
     public int damage;
+    public string child;
+    public int childNum;
+    public string childWhen;
 }
