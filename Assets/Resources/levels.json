@@ -7,7 +7,7 @@
                 "enemy": "zombie",
                 "count": "5 wave +",
                 "hp": "base 5 wave * +",
-                "delay": "5",
+                "delay": "3",
                 "sequence": [1,2,3],
                 "location": "random"
             },
@@ -28,8 +28,8 @@
                 "enemy": "great slime",   // new enemy
                 "count": "2 wave 3 / +",
                 "hp": "base 5 wave * +",
-                "delay": "4",
-                "sequence": [1,1],
+                "delay": "3",
+                "sequence": [1],
                 "location": "random green"
             }
        ]
@@ -42,7 +42,7 @@
                 "enemy": "zombie",
                 "count": "5 wave 2 * +",
                 "hp": "25 wave *",
-                "delay": "5",
+                "delay": "2",
                 "sequence": [ 1, 2, 3 ],
                 "location": "random"
             },
@@ -64,8 +64,8 @@
                 "enemy": "great slime", //new enemy
                 "count": "3 wave 2 / +",
                 "hp": "base 5 wave * +",
-                "delay": "4",
-                "sequence": [ 1, 2 ],
+                "delay": "3",
+                "sequence": [ 1, 1],
                 "location": "random green"
             },
             {
@@ -85,7 +85,7 @@
                 "enemy": "zombie",
                 "count": "5 wave 3 * +",
                 "hp": "15 wave *",
-                "delay": "5",
+                "delay": "3",
                 "sequence": [ 1, 2, 3 ],
                 "location": "random"
             },
@@ -107,7 +107,7 @@
                 "enemy": "great slime", //new enemy
                 "count": "2 wave 4 / +",
                 "hp": "base 5 wave * +",
-                "delay": "5",
+                "delay": "3",
                 "sequence": [ 1, 1 ],
                 "location": "random green"
             },

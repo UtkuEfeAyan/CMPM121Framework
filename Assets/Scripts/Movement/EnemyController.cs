@@ -14,8 +14,11 @@ public class EnemyController : MonoBehaviour
     public bool dead;
     public string onDeath;
     public EnemySpawner spawner;
-
     public float last_attack;
+
+    public int score; // Score this enemy gives when killed
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

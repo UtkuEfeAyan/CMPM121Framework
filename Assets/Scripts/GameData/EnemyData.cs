@@ -12,4 +12,5 @@ public class EnemyData
     public int childNum;
     public string child;
     public string childWhen;
+    public int score;
 }

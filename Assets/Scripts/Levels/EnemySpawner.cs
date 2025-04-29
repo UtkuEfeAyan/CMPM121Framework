@@ -1,5 +1,5 @@
 //Editor: Xavier Austin (ui and level handling and enemy spawning)
-//Editor: Efe Ayan (enemy spawning)
+//Editor: Efe Ayan (enemy spawning, next wave and multiple other fucntions for handling the end game and stats requirements, also music)
 using UnityEngine;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Collections;
 using System.Linq;
+using UnityEngine.SocialPlatforms.Impl;
 //using System;
 
 public class EnemySpawner : MonoBehaviour
@@ -68,13 +69,26 @@ public class EnemySpawner : MonoBehaviour
     public void NextWave()
     {
         waveNum ++;
+
+        // Give bonus points for surviving the previous wave
+        if (waveNum > 1) // Only after Wave 1 (not at start)
+            GameManager.Instance.waveScore += (int)((waveNum - 1) * 100);
         // if waves arn't specified assume endless otherwise use wave total
+        // Endless mode: waves == 0
         if (levelJSON.waves == 0)
+        {
             StartCoroutine(SpawnWave());
+            return; // Important: STOP HERE for endless mode!
+        }
+        // Normal fixed-wave mode
         if (waveNum < levelJSON.waves)
+        {
             StartCoroutine(SpawnWave());
+        }
         else
+        {
             GameManager.Instance.state = GameManager.GameState.GAMEOVER;
+        }
     }
 
     IEnumerator SpawnWave()
@@ -139,26 +153,34 @@ public class EnemySpawner : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
     }
 
-    public GameObject EnemyToSpawnByName(string name){
-        float  hp     = 0;
-        float  speed  = 0;
-        float  damage = 0;
-        int    sprite = 0;
-        int    childN = 0;
-        string child  = null;
+    public GameObject EnemyToSpawnByName(string name)
+    {
+        float hp = 0;
+        float speed = 0;
+        float damage = 0;
+        int sprite = 0;
+        int childN = 0;
+        string child = null;
         string childW = null;
-        foreach (var enemyDisc in enemiesJSON){
-            if (name == enemyDisc.name){
-                hp     = enemyDisc.hp;
-                speed  = enemyDisc.speed;
-                damage = enemyDisc.damage;
-                child  = enemyDisc.child; 
-                childW = enemyDisc.childWhen; 
-                childN = enemyDisc.childNum; 
-                sprite = enemyDisc.sprite;
+        int score = 0; // Add score variable
+
+        // Find the enemy data that matches the given name
+        foreach (var enemyData in enemiesJSON)
+        {
+            if (enemyData.name == name)
+            {
+                hp = enemyData.hp;
+                speed = enemyData.speed;
+                damage = enemyData.damage;
+                child = enemyData.child;
+                childW = enemyData.childWhen;
+                childN = enemyData.childNum;
+                sprite = enemyData.sprite;
+                score = enemyData.score; // Store score properly
+                break; // Found it, stop looping
             }
         }
-        
+
         SpawnPoint spawn_point = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
         Vector2 offset = Random.insideUnitCircle * 1.8f;
         Vector3 initial_position = spawn_point.transform.position + new Vector3(offset.x, offset.y, 0);
@@ -175,11 +197,12 @@ public class EnemySpawner : MonoBehaviour
         en.child = child;
         en.childNum = childN;
         en.spawner = this;
+        en.score = score; // if you read 'score' from JSON
         //Debug.Log(name);
         return new_enemy;
     }
 
-    uint GetWave(){
+    public uint GetWave(){
         return waveNum;
     }
 }

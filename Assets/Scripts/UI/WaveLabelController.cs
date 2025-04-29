@@ -13,6 +13,7 @@ public class WaveLabelController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GameManager.Instance.UpdateTimer();
         if (GameManager.Instance.state == GameManager.GameState.INWAVE)
         {
             tmp.text = "Enemies left: " + GameManager.Instance.enemy_count;

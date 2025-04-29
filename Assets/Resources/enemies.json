@@ -1,67 +1,76 @@
 [
-   {
-       "name": "zombie",
-       "sprite": 0,
-       "hp": 20,
-       "speed": 5,
-       "damage": 5
-   },
-   {
-       "name": "skeleton",
-       "sprite": 1,
-       "hp": 30,
-       "speed": 7,
-       "damage": 10
-   },  
-   {
-       "name": "warlock",
-       "sprite": 19,
-       "hp": 30,
-       "speed": 7,
-       "damage": 10
-   },
-   {
-        "name": "great slime",
-        "sprite": 2,
-        "hp": 45,
-        "speed": 3,
-        "damage": 25,
-        "child": "slime",
-        "childNum": 2,
-        "childWhen": "death"
-   },
-   {
-        "name": "slime",
-        "sprite": 3,
-        "hp": 20,
-        "speed": 5,
-        "damage": 10,
-        "child": "goo",
-        "childNum": 3,
-        "childWhen": "death"
-   },
-   {
-        "name": "goo",
-        "sprite": 4,
-        "hp": 5,
-        "speed": 7,
-        "damage": 3
-   },
-   {
-        "name": "slate",
-        "sprite": 6,
-        "hp": 200,
-        "speed": 1,
-        "damage": 5,
-        "child": "chip",
-        "childNum": 1,
-        "childWhen": "hit"
-   },
-   {
-        "name": "chip",
-        "sprite": 16,
-        "hp": 5,
-        "speed": 7,
-        "damage": 3
-   }
+  {
+    "name": "zombie",
+    "sprite": 0,
+    "hp": 20,
+    "speed": 5,
+    "damage": 5,
+    "score": 15
+
+  },
+  {
+    "name": "skeleton",
+    "sprite": 1,
+    "hp": 30,
+    "speed": 7,
+    "damage": 10,
+    "score": 25
+  },
+  {
+    "name": "warlock",
+    "sprite": 19,
+    "hp": 30,
+    "speed": 7,
+    "damage": 10,
+    "score": 500
+  },
+  {
+    "name": "great slime",
+    "sprite": 2,
+    "hp": 45,
+    "speed": 3,
+    "damage": 25,
+    "child": "slime",
+    "childNum": 2,
+    "childWhen": "death",
+    "score": 50
+  },
+  {
+    "name": "slime",
+    "sprite": 3,
+    "hp": 20,
+    "speed": 5,
+    "damage": 10,
+    "child": "goo",
+    "childNum": 3,
+    "childWhen": "death",
+    "score": 10
+  },
+  {
+    "name": "goo",
+    "sprite": 4,
+    "hp": 5,
+    "speed": 7,
+    "damage": 3,
+    "score": 5
+  },
+  {
+    "name": "slate",
+    "sprite": 6,
+    "hp": 200,
+    "speed": 1,
+    "damage": 5,
+    "child": "chip",
+    "childNum": 1,
+    "childWhen": "hit",
+    "score": 20
+  },
+  {
+    "name": "chip",
+    "sprite": 16,
+    "hp": 5,
+    "speed": 7,
+    "damage": 3,
+    "score": 5
+  }
 ]
