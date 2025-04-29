@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour
     public Hittable hp;
     public float damage;
     public string child;
+    public int childNum;
     public HealthBar healthui;
     public bool dead;
     public string onDeath;
@@ -56,8 +57,11 @@ public class EnemyController : MonoBehaviour
             dead = true;
             if (child != "" && child != null){
                 Debug.Log(child);
-                GameObject new_enemy = spawner.EnemyToSpawnByName(child);
-                GameManager.Instance.AddEnemy(new_enemy);
+                for (int i = 0; i < childNum; i++){
+                    GameObject new_enemy = spawner.EnemyToSpawnByName(child);
+                    new_enemy.transform.position = transform.position + new Vector3(Convert.ToSingle(1.8*Math.Cos(i)*i), Convert.ToSingle(1.8*Math.Sin(i)*i), 0);
+                    GameManager.Instance.AddEnemy(new_enemy);
+                }
             }
             GameManager.Instance.RemoveEnemy(gameObject);
             Destroy(gameObject);

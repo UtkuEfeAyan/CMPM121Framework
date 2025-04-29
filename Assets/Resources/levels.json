@@ -5,7 +5,7 @@
        "spawns": [
             {
                 "enemy": "zombie",
-                "count": "5 wave + 0 *",
+                "count": "5 wave +",
                 "hp": "base 5 wave * +",
                 "delay": "5",
                 "sequence": [1,2,3],
@@ -13,7 +13,7 @@
             },
             {   
                 "enemy": "skeleton",
-                "count": "wave 3 / 0 *",
+                "count": "wave 3 /",
                 "hp": "30 wave *",
                 "sequence": [2, 2],
                 "location": "random red"
@@ -26,8 +26,8 @@
             },
             {
                 "enemy": "great slime",
-                "count": "wave 7 % 5 - 20 +",
-                "hp": "base wave * 9 / 100 +",
+                "count": "wave 7 % 5 -",
+                "hp": "base wave * 9 /",
                 "location": "random green"
             }
         ]

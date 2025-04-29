@@ -70,6 +70,8 @@ public class EnemySpawner : MonoBehaviour
             StartCoroutine(SpawnWave());
         if (waveNum < levelJSON.waves)
             StartCoroutine(SpawnWave());
+        else
+            GameManager.Instance.state = GameManager.GameState.GAMEOVER;
     }
 
     IEnumerator SpawnWave()
@@ -115,6 +117,17 @@ public class EnemySpawner : MonoBehaviour
     IEnumerator SpawnEnemies(SpawnData data)
     {
         GameObject new_enemy = EnemyToSpawnByName(data.enemy);
+        /*
+        Vector2 offset = Random.insideUnitCircle * 1.8f;
+        List<SpawnPoint> MySpawns = new List<SpawnPoint>{};
+        foreach (SpawnPoint possible in SpawnPoints){
+            if ((possible.kind == SpawnPoint.SpawnName.RED && data.location == "random red") 
+             || (possible.kind == SpawnPoint.SpawnName.GREEN && data.location == "random green") 
+             || (possible.kind == SpawnPoint.SpawnName.BONE && data.location == "random bone"))
+                MySpawns.Add(possible);
+        }
+        new_enemy.transform.position = MySpawns[Random.Range(0, MySpawns.Count)].transform.position + new Vector3(offset.x, offset.y, 0);
+        */
         EnemyController en = new_enemy.GetComponent<EnemyController>();
         en.hp = new Hittable(RPNParser.Instance.DoParse(data.hp, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.hp.hp}}), Hittable.Team.MONSTERS, new_enemy);
         en.speed = RPNParser.Instance.DoParse(data.speed, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.speed}});
@@ -145,8 +158,8 @@ public class EnemySpawner : MonoBehaviour
         
         SpawnPoint spawn_point = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
         Vector2 offset = Random.insideUnitCircle * 1.8f;
-                
         Vector3 initial_position = spawn_point.transform.position + new Vector3(offset.x, offset.y, 0);
+        
         GameObject new_enemy = Instantiate(enemy, initial_position, Quaternion.identity);
 
         //sprite selector
@@ -157,8 +170,9 @@ public class EnemySpawner : MonoBehaviour
         en.speed = speed;
         en.damage = damage;
         en.child = child;
+        en.childNum = childN;
         en.spawner = this;
-        Debug.Log(name);
+        //Debug.Log(name);
         return new_enemy;
     }
 
