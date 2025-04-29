@@ -65,6 +65,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void NextWave()
     {
+        waveNum ++;
         // if waves arn't specified assume endless otherwise use wave total
         if (levelJSON.waves == 0)
             StartCoroutine(SpawnWave());
@@ -110,7 +111,6 @@ public class EnemySpawner : MonoBehaviour
             }
         }
         yield return new WaitWhile(() => GameManager.Instance.enemy_count > 0);
-        waveNum ++;
         GameManager.Instance.state = GameManager.GameState.WAVEEND;
     }
 
