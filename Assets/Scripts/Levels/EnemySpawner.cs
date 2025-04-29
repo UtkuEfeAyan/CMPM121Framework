@@ -62,12 +62,12 @@ public class EnemySpawner : MonoBehaviour
         GameManager.Instance.player.GetComponent<PlayerController>().StartLevel();
         //Play appropriate music!
         MusicManager.Instance.PlayMusicForDifficulty(levelname);
-
         NextWave();
     }
 
     public void NextWave()
     {
+        waveNum ++;
         // if waves arn't specified assume endless otherwise use wave total
         if (levelJSON.waves == 0)
             StartCoroutine(SpawnWave());
@@ -113,7 +113,6 @@ public class EnemySpawner : MonoBehaviour
             }
         }
         yield return new WaitWhile(() => GameManager.Instance.enemy_count > 0);
-        waveNum ++;
         GameManager.Instance.state = GameManager.GameState.WAVEEND;
     }
 
@@ -131,6 +130,7 @@ public class EnemySpawner : MonoBehaviour
         }
         new_enemy.transform.position = MySpawns[Random.Range(0, MySpawns.Count)].transform.position + new Vector3(offset.x, offset.y, 0);
         */
+        //comment to push and do pull request
         EnemyController en = new_enemy.GetComponent<EnemyController>();
         en.hp = new Hittable(RPNParser.Instance.DoParse(data.hp, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.hp.hp}}), Hittable.Team.MONSTERS, new_enemy);
         en.speed = RPNParser.Instance.DoParse(data.speed, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.speed}});
