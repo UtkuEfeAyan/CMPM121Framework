@@ -1,13 +1,19 @@
 using UnityEngine;
+using System;
 
 public class EnemyController : MonoBehaviour
 {
 
     public Transform target;
-    public int speed;
+    public float speed;
     public Hittable hp;
+    public float damage;
+    public string child;
+    public int childNum;
     public HealthBar healthui;
     public bool dead;
+    public string onDeath;
+    public EnemySpawner spawner;
 
     public float last_attack;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -37,16 +43,26 @@ public class EnemyController : MonoBehaviour
         if (last_attack + 2 < Time.time)
         {
             last_attack = Time.time;
-            target.gameObject.GetComponent<PlayerController>().hp.Damage(new Damage(5, Damage.Type.PHYSICAL));
+            target.gameObject.GetComponent<PlayerController>().hp.Damage(new Damage(Convert.ToInt32(damage), Damage.Type.PHYSICAL));
         }
     }
 
 
     void Die()
     {
+        //Die can be ran multiple times in one frame from multiple sources so
+        //this activates once with this implementation
         if (!dead)
         {
             dead = true;
+            if (child != "" && child != null){
+                Debug.Log(child);
+                for (int i = 0; i < childNum; i++){
+                    GameObject new_enemy = spawner.EnemyToSpawnByName(child);
+                    new_enemy.transform.position = transform.position + new Vector3(Convert.ToSingle(1.8*Math.Cos(i)*i), Convert.ToSingle(1.8*Math.Sin(i)*i), 0);
+                    GameManager.Instance.AddEnemy(new_enemy);
+                }
+            }
             GameManager.Instance.RemoveEnemy(gameObject);
             Destroy(gameObject);
         }

@@ -25,10 +25,10 @@ public class Hittable
 
     public event Action OnDeath;
 
-    public Hittable(int hp, Team team, GameObject owner)
+    public Hittable(float hp, Team team, GameObject owner)
     {
-        this.hp = hp;
-        this.max_hp = hp;
+        this.hp = Convert.ToInt32(hp);
+        this.max_hp = this.hp;
         this.team = team;
         this.owner = owner;
     }
