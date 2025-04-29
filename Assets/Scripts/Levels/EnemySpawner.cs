@@ -130,7 +130,7 @@ public class EnemySpawner : MonoBehaviour
              || (data.location == "random"))
                 MySpawns.Add(possible);
         }
-w        new_enemy.transform.position = MySpawns[Random.Range(0, MySpawns.Count-1)].transform.position + new Vector3(offset.x, offset.y, 0);
+        new_enemy.transform.position = MySpawns[Random.Range(0, MySpawns.Count-1)].transform.position + new Vector3(offset.x, offset.y, 0);
 
         EnemyController en = new_enemy.GetComponent<EnemyController>();
         en.hp = new Hittable(RPNParser.Instance.DoParse(data.hp, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.hp.hp}}), Hittable.Team.MONSTERS, new_enemy);
