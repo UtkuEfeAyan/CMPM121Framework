@@ -107,9 +107,13 @@ MonoBehaviour:
   target: {fileID: 0}
   speed: 5
   damage: 0
+  child: 
+  childWhen: 
+  childNum: 0
   healthui: {fileID: 7326907792581316403}
   dead: 0
   onDeath: 
+  spawner: {fileID: 0}
   last_attack: 0
 --- !u!61 &6121702002466829456
 BoxCollider2D:

@@ -12,7 +12,7 @@ public class Hittable
 
     public GameObject owner;
 
-    public event Action OnHit;
+    //public event Action OnHit;
     public event Action OnDeath;
     public void Damage(Damage damage)
     {
