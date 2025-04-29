@@ -33,6 +33,11 @@ public class GameManager
     public PlayerSpriteManager playerSpriteManager;
     public RelicIconManager relicIconManager;
 
+    public float elapsedTime;
+    public int enemiesKilled;
+    public int projectilesFired;
+    public int waveScore; // This will be your total score
+
     private List<GameObject> enemies;
     public int enemy_count { get { return enemies.Count; } }
 
@@ -43,6 +48,14 @@ public class GameManager
     public void RemoveEnemy(GameObject enemy)
     {
         enemies.Remove(enemy);
+        enemiesKilled++; // Increment enemies killed
+
+
+        var ec = enemy.GetComponent<EnemyController>();
+        if (ec != null)
+        {
+            waveScore += ec.score; // Add enemy score when enemy is killed
+        }
     }
 
     public GameObject GetClosestEnemy(Vector3 point)
@@ -51,9 +64,27 @@ public class GameManager
         if (enemies.Count == 1) return enemies[0];
         return enemies.Aggregate((a,b) => (a.transform.position - point).sqrMagnitude < (b.transform.position - point).sqrMagnitude ? a : b);
     }
-
+    //Call this every frame during gameplay
+    public void UpdateTimer()
+    {
+        if (state == GameState.INWAVE || state == GameState.COUNTDOWN || state == GameState.WAVEEND)
+        {
+            elapsedTime += Time.deltaTime;
+        }
+    }
     private GameManager()
     {
         enemies = new List<GameObject>();
     }
+    // added to fix the bug of enemeis left keeepingthe count of enemeis after reset
+    public void ResetGameManager()
+    {
+        enemies.Clear();
+        elapsedTime = 0;
+        enemiesKilled = 0;
+        projectilesFired = 0;
+        waveScore = 0; //Reset score too
+        state = GameState.PREGAME;
+    }
+
 }

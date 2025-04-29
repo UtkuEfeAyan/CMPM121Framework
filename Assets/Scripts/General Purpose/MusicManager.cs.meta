@@ -1,2 +1,14 @@
 fileFormatVersion: 2
 guid: 0c122b02b603f244ba6d773e4d88f5af
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - easyMusic: {instanceID: 0}
+  - mediumMusic: {instanceID: 0}
+  - endlessMusic: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

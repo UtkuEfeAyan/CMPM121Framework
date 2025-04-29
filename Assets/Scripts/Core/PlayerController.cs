@@ -23,10 +23,16 @@ public class PlayerController : MonoBehaviour
     {
         unit = GetComponent<Unit>();
         GameManager.Instance.player = gameObject;
+
+        StartLevel();
     }
+
 
     public void StartLevel()
     {
+      if (spellcaster != null)
+            return; // Already initialized, do nothing
+
         spellcaster = new SpellCaster(125, 8, Hittable.Team.PLAYER);
         StartCoroutine(spellcaster.ManaRegeneration());
         
@@ -64,6 +70,7 @@ public class PlayerController : MonoBehaviour
     void Die()
     {
         Debug.Log("You Lost");
+        GameManager.Instance.state = GameManager.GameState.GAMEOVER;
     }
 
 }
