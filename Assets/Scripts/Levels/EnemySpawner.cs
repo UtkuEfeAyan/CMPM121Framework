@@ -175,6 +175,7 @@ public class EnemySpawner : MonoBehaviour
         en.damage = damage;
         en.child = child;
         en.childNum = childN;
+        en.childWhen = childW;
         en.spawner = this;
         //Debug.Log(name);
         return new_enemy;
