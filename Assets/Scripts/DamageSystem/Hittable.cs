@@ -12,13 +12,14 @@ public class Hittable
 
     public GameObject owner;
 
-    public event Action OnHit;
+    //public event Action OnHit;
     public event Action OnDeath;
     public void Damage(Damage damage)
     {
         EventBus.Instance.DoDamage(owner.transform.position, damage, this);
         hp -= damage.amount;
-        OnHit?.Invoke(); // added on hit i think
+        //OnHit?.Invoke(); // added on hit i think
+        //i looked around for similar statements and actually found one in the event bus
 
         if (hp <= 0)
         {

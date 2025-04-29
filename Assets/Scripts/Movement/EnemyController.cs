@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour
     public Hittable hp;
     public float damage;
     public string child;
+    public string childWhen;
     public int childNum;
     public HealthBar healthui;
     public bool dead;
@@ -21,6 +22,7 @@ public class EnemyController : MonoBehaviour
     {
         target = GameManager.Instance.player.transform;
         hp.OnDeath += Die;
+        EventBus.Instance.OnDamage += OnDamage;
         healthui.SetHealth(hp);
     }
 
@@ -54,17 +56,22 @@ public class EnemyController : MonoBehaviour
         //this activates once with this implementation
         if (!dead)
         {
+            if (childWhen == "death")
+                SpawnChildren();
             dead = true;
-            if (child != "" && child != null){
-                Debug.Log(child);
-                for (int i = 0; i < childNum; i++){
-                    GameObject new_enemy = spawner.EnemyToSpawnByName(child);
-                    new_enemy.transform.position = transform.position + new Vector3(Convert.ToSingle(1.8*Math.Cos(i)*i), Convert.ToSingle(1.8*Math.Sin(i)*i), 0);
-                    GameManager.Instance.AddEnemy(new_enemy);
-                }
-            }
             GameManager.Instance.RemoveEnemy(gameObject);
             Destroy(gameObject);
+        }
+    }
+    void OnDamage(Vector3 where, Damage dmg, Hittable target){
+        if (childWhen == "hit" && hp == target)
+            SpawnChildren();
+    }
+    void SpawnChildren(){
+        for (int i = 1; (child != null) && (i < childNum + 1); i++){
+            GameObject new_enemy = spawner.EnemyToSpawnByName(child);
+            new_enemy.transform.position = transform.position + new Vector3(Convert.ToSingle(1.8*Math.Cos(i)*i), Convert.ToSingle(1.8*Math.Sin(i)*i), 0);
+            GameManager.Instance.AddEnemy(new_enemy);
         }
     }
 }

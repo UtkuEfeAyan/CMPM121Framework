@@ -119,18 +119,20 @@ public class EnemySpawner : MonoBehaviour
     IEnumerator SpawnEnemies(SpawnData data)
     {
         GameObject new_enemy = EnemyToSpawnByName(data.enemy);
-        /*
+
         Vector2 offset = Random.insideUnitCircle * 1.8f;
         List<SpawnPoint> MySpawns = new List<SpawnPoint>{};
         foreach (SpawnPoint possible in SpawnPoints){
+            //Debug.Log(data.location);
             if ((possible.kind == SpawnPoint.SpawnName.RED && data.location == "random red") 
              || (possible.kind == SpawnPoint.SpawnName.GREEN && data.location == "random green") 
-             || (possible.kind == SpawnPoint.SpawnName.BONE && data.location == "random bone"))
+             || (possible.kind == SpawnPoint.SpawnName.BONE && data.location == "random bone")
+             || (data.location == "random"))
                 MySpawns.Add(possible);
         }
+        Debug.Log(MySpawns.Count);
         new_enemy.transform.position = MySpawns[Random.Range(0, MySpawns.Count)].transform.position + new Vector3(offset.x, offset.y, 0);
-        */
-        //comment to push and do pull request
+
         EnemyController en = new_enemy.GetComponent<EnemyController>();
         en.hp = new Hittable(RPNParser.Instance.DoParse(data.hp, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.hp.hp}}), Hittable.Team.MONSTERS, new_enemy);
         en.speed = RPNParser.Instance.DoParse(data.speed, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.speed}});
@@ -174,6 +176,7 @@ public class EnemySpawner : MonoBehaviour
         en.damage = damage;
         en.child = child;
         en.childNum = childN;
+        en.childWhen = childW;
         en.spawner = this;
         //Debug.Log(name);
         return new_enemy;
