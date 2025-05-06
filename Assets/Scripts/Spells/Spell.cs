@@ -2,41 +2,58 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-
 public class Spell 
 {
     public float last_cast;
     public SpellCaster owner;
     public Hittable.Team team;
+    public string name;
+    public string description;
+    public int icon;
+    public int N;
+    public int damage;
+    public int secondary_damage;
+    public int mana_cost;
+    public float cooldown;
+    public float knockback;
+    public ProjectileData projectile;
+    public ProjectileData secondary_projectile;
 
     public Spell(SpellCaster owner)
     {
+        //debug
+        this.name = "Bolt";
+        this.mana_cost = 10;
+        this.damage = 100;
+        this.cooldown = 0.75f;
+        this.icon = 0;
+        //debug end
         this.owner = owner;
     }
 
     public string GetName()
     {
-        return "Bolt";
+        return this.name;
     }
 
     public int GetManaCost()
     {
-        return 10;
+        return this.mana_cost;
     }
 
     public int GetDamage()
     {
-        return 100;
+        return this.damage;
     }
 
     public float GetCooldown()
     {
-        return 0.75f;
+        return this.cooldown;
     }
 
     public virtual int GetIcon()
     {
-        return 0;
+        return icon;
     }
 
     public bool IsReady()

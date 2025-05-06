@@ -144,7 +144,7 @@ public class EnemySpawner : MonoBehaviour
              || (data.location == "random"))
                 MySpawns.Add(possible);
         }
-        Debug.Log(MySpawns.Count);
+        //Debug.Log(MySpawns.Count);
         new_enemy.transform.position = MySpawns[Random.Range(0, MySpawns.Count)].transform.position + new Vector3(offset.x, offset.y, 0);
 
         EnemyController en = new_enemy.GetComponent<EnemyController>();

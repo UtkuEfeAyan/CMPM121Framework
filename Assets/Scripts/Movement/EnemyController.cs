@@ -18,6 +18,7 @@ public class EnemyController : MonoBehaviour
     public float last_attack;
 
     public int score; // Score this enemy gives when killed
+    private int myRand;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,6 +28,7 @@ public class EnemyController : MonoBehaviour
         hp.OnDeath += Die;
         EventBus.Instance.OnDamage += OnDamage;
         healthui.SetHealth(hp);
+        myRand = GameManager.Instance.GetHackRand();
     }
 
     // Update is called once per frame
@@ -38,8 +40,9 @@ public class EnemyController : MonoBehaviour
             DoAttack();
         }
         else
-        {
+        { 
             GetComponent<Unit>().movement = direction.normalized * speed;
+            Unstuck();
         }
     }
     
@@ -71,10 +74,27 @@ public class EnemyController : MonoBehaviour
             SpawnChildren();
     }
     void SpawnChildren(){
-        for (int i = 1; (child != null) && (i < childNum + 1); i++){
+        for (int i = 0; (child != null) && (i < childNum); i++){//for (int i = 1; (child != null) && (i < childNum + 1); i++){
             GameObject new_enemy = spawner.EnemyToSpawnByName(child);
-            new_enemy.transform.position = transform.position + new Vector3(Convert.ToSingle(1.8*Math.Cos(i)*i), Convert.ToSingle(1.8*Math.Sin(i)*i), 0);
+            new_enemy.transform.position = transform.position; //+ new Vector3(Convert.ToSingle(1.8*Math.Cos(i)*i), Convert.ToSingle(1.8*Math.Sin(i)*i), 0);
             GameManager.Instance.AddEnemy(new_enemy);
         }
+    }
+
+    void Unstuck(){
+        GetComponent<Collider2D>().enabled = false;
+        Vector3 pos3 = GetComponent<Unit>().transform.position;
+        Vector2 pos = new Vector2(pos3.x,pos3.y);
+        Vector2 displace = new Vector2(-0.4f,-0.4f);
+        //if (Physics2D.OverlapArea(pos+displace,pos-displace) != null)
+        //    Debug.Log(GetComponent<Unit>().transform.position);
+        for (int i = 0; (Physics2D.OverlapArea(pos+displace,pos-displace) != null) && (i < 300); i++){
+            float tempA = i + myRand;
+            float tempX = Mathf.Cos(tempA)*i*0.3f;
+            float tempY = Mathf.Sin(tempA)*i*0.3f;
+            GetComponent<Unit>().transform.position = pos3 + new Vector3(tempX, tempY, 0);
+            pos += new Vector2(tempX, tempY);
+        }
+        GetComponent<Collider2D>().enabled = true;
     }
 }

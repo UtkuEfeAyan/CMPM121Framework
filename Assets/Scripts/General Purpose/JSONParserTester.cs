@@ -1,6 +1,9 @@
 //Author: Efe Ayan
 using UnityEngine;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+
 
 /// <summary>
 /// Simple test script to check if JSONParser is loading enemies and levels correctly.
@@ -12,6 +15,7 @@ public class JSONParserTester : MonoBehaviour
     {
         TestEnemyLoading();
         TestLevelLoading();
+        TestSpellLoading();
     }
 
     private void TestEnemyLoading()
@@ -49,6 +53,24 @@ public class JSONParserTester : MonoBehaviour
             {
                 Debug.Log($"  Spawn Enemy: {spawn.enemy}, Count Expression: {spawn.count}, HP Expression: {spawn.hp}");
             }
+        }
+    }
+
+    private void TestSpellLoading()
+    {
+        var spells = JSONParser.Instance.LoadAsDictionary<string, SpellData>("spells");
+        
+        if (spells == null)
+        {
+            Debug.LogError("Failed to load spells!");
+            return;
+        }
+
+        Debug.Log($"Successfully loaded {spells.Count} spells!");
+        //Debug.Log($"Successfully loaded {} spells!");
+        foreach (string spellID in spells.Keys)
+        {
+            Debug.Log($"Name: {spells[spellID].name}, Description: {spells[spellID].description}");
         }
     }
 }

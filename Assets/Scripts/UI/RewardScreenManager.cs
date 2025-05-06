@@ -31,8 +31,8 @@ public class RewardScreenManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (rewardStatsText != null)
-            Debug.Log("Stats Text: " + rewardStatsText.text);
+        //if (rewardStatsText != null)
+        //    Debug.Log("Stats Text: " + rewardStatsText.text);
 
         if (GameManager.Instance.state == GameManager.GameState.WAVEEND)
         {

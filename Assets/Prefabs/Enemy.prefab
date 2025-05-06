@@ -115,6 +115,7 @@ MonoBehaviour:
   onDeath: 
   spawner: {fileID: 0}
   last_attack: 0
+  score: 0
 --- !u!61 &6121702002466829456
 BoxCollider2D:
   m_ObjectHideFlags: 0

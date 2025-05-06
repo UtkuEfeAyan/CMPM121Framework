@@ -16,6 +16,7 @@ public class SpellBuilder
    
     public SpellBuilder()
     {        
+        
     }
 
 }

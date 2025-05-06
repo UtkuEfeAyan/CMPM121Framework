@@ -53,5 +53,48 @@
             "type": "gain-mana",
             "amount": "25"
         }
+    },
+    {
+        "name": "Astral Ejection",
+        "sprite": 4,
+        "trigger": {
+            "description": "When you kill an enemy",
+            "type": "on-kill"
+        },
+        "effect": {
+            "description": "spawn multiple high damage homing projectiles where the enemy died.",
+            "type": "cast-spell",
+            "amount": "3",
+            "spell": "homing arcane_blast"
+        }
+    },
+    {
+        "name": "Puzzle Box",
+        "sprite": 11,
+        "trigger": {
+            "description": "When you stand still",
+            "type": "stand-still",
+            "amount": "0"
+        },
+        "effect": {
+            "description": "slightly reduce damage taken until your next spell is cast.",
+            "type": "damage-reduction",
+            "amount": "wave 5 *",
+            "until": "cast-spell"
+        }
+    },
+    {
+        "name": "Karma",
+        "sprite": 14,
+        "trigger": {
+            "description": "When you take damage or deal damage",
+            "type": "any-damage",
+            "amount": "5"
+        },
+        "effect": {
+            "description": "deal a small amount of damage in return or take self damage respectively.",
+            "type": "damage",
+            "amount": "wave 5 *"
+        }
     }
 ]

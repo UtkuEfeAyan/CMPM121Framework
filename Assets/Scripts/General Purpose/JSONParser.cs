@@ -62,6 +62,18 @@ public class JSONParser : MonoBehaviour
         }
     }
 
+    public Dictionary<KeyType, T> LoadAsDictionary<KeyType, T>(string resourceDataName)
+    {
+        UnityTextAsset jsonText = Resources.Load<UnityTextAsset>(resourceDataName);
+        if (jsonText == null)
+        {
+            Debug.LogError($"JSONParser: Failed to load JSON file at path: {resourceDataName}");
+            return null;
+        }
+
+        return JsonConvert.DeserializeObject<Dictionary<KeyType, T>>(jsonText.text);
+        
+    }
 }
 
    
