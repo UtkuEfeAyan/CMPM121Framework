@@ -4,14 +4,6 @@ using UnityEngine;
 
 
 [Serializable]
-
-public class ProjectileData
-{
-    string trajectory;
-    string lifetime;
-    string speed;
-    int sprite;
-}
 public class SpellData
 {
     public string name;
@@ -30,4 +22,11 @@ public class DamageData
 {
     public string ammount;
     public string type;
+}
+public class ProjectileData
+{
+    string trajectory;
+    string lifetime;
+    string speed;
+    int sprite;
 }

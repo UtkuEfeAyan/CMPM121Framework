@@ -1,5 +1,5 @@
 [
-   {   
+    {   
        "name": "Easy",
        "waves": 10,
        "spawns": [
@@ -32,9 +32,9 @@
                 "sequence": [1],
                 "location": "random green"
             }
-       ]
-   },
-   {   
+        ]
+    },
+    {   
        "name": "Medium",
        "waves": 15,
        "spawns": [
@@ -76,9 +76,9 @@
                 "sequence": [ 2 ],
                 "location": "random"
             }
-       ]
-   },
-   {   
+        ]
+    },
+    {   
         "name": "Endless",
         "spawns": [
             {
@@ -120,6 +120,19 @@
                 "location": "random"
             } 
 
-         ]
-   }
+        ]
+    },
+    {   
+       "name": "Stupid",
+       "spawns": [
+            {
+                "enemy": "slate",
+                "count": "wave 2 /",
+                "hp": "base 50 wave * +",
+                "delay": "3",
+                "sequence": [ 1, 1 ],
+                "location": "random"
+            } 
+        ]
+    }
 ]

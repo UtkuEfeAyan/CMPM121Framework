@@ -57,7 +57,8 @@ public class MusicManager : MonoBehaviour
                 selectedClip = endlessMusic;
                 break;
             default:
-                Debug.LogWarning($"MusicManager: Unknown difficulty '{difficulty}'.");
+                selectedClip = easyMusic;
+                Debug.LogWarning($"MusicManager: Dynamically added difficulty '{difficulty}' will use easy mode music.");
                 break;
         }
 
