@@ -87,5 +87,11 @@
         "description": "Significantly increased damage, but projectile speed is reduced by 60%.",
         "speed_multiplier": "0.4",
         "damage_multiplier": "2 wave 5 / +"
+    },
+    "wild": {
+        "name": "Wild",
+        "description": "Spell is cast with innacuracy, but the projectile occasionally does significantly more damage.",
+        "speed_multiplier": "0.4",
+        "damage_multiplier": "2 wave 5 / +"
     }
 }
