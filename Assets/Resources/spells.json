@@ -92,6 +92,6 @@
         "name": "Wild",
         "description": "Spell is cast in a squiggly line, and the projectile occasionally does significantly more damage.",
         "projectile_trajectory": "squiggly",
-        "damage_multiplier": "2 wave 5 / +"
+        "crit": "5"
     }
 }

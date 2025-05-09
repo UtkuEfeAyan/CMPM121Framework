@@ -17,9 +17,9 @@ public class Spell
     public int mana_cost;
     public float cooldown;
     public float knockback;
-    public ProjectileData projectile;
+    public float lifetime;
     public ProjectileData secondary_projectile;
-    public bool crit;
+    public int crit;
 
     public Spell(SpellCaster owner, SpellData data)
     {
@@ -30,8 +30,10 @@ public class Spell
         this.mana_cost = Convert.ToInt32(RPNParser.Instance.DoParse(data.mana_cost, vars));
         this.damage = Convert.ToInt32(RPNParser.Instance.DoParse(data.damage.amount, vars));
         this.cooldown = Convert.ToInt32(RPNParser.Instance.DoParse(data.cooldown, vars));
+        this.crit = Convert.ToInt32(RPNParser.Instance.DoParse(data.crit, vars));
         this.icon = data.icon;
         this.owner = owner;
+        this.lifetime = RPNParser.Instance.DoParse(data.projectile.lifetime, vars);
     }
 
     public string GetName()
@@ -67,7 +69,10 @@ public class Spell
     public virtual IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team)
     {
         this.team = team;
-        GameManager.Instance.projectileManager.CreateProjectile(0, "straight", where, target - where, 15f, OnHit);
+        if (this.lifetime == 0)
+            GameManager.Instance.projectileManager.CreateProjectile(0, "straight", where, target - where, 15f, OnHit);
+        else 
+            GameManager.Instance.projectileManager.CreateProjectile(0, "straight", where, target - where, 15f, OnHit, this.lifetime);
         yield return new WaitForEndOfFrame();
     }
 
@@ -75,7 +80,10 @@ public class Spell
     {
         if (other.team != team)
         {
+            int temp = this.damage;
+            this.damage = (UnityEngine.Random.Range(0,100) < this.crit)? this.damage * 6: this.damage;
             other.Damage(new Damage(GetDamage(), Damage.Type.ARCANE));
+            this.damage = temp;
         }
 
     }

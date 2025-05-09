@@ -18,8 +18,7 @@ public class SpellBuilder
         tmp.projectile = new ProjectileData();
         //more likely for spells to have fewer modifiers
         //https://docs.google.com/spreadsheets/d/1X-_UfeW2mAwUQv6uW-ZxrBZj2EktS3KD1O0_uItuPJ0/edit?usp=sharing
-        int maxMods = UnityEngine.Random.Range(0,20)/UnityEngine.Random.Range(1,10);
-        maxMods = 4;
+        int maxMods = UnityEngine.Random.Range(0,21)/UnityEngine.Random.Range(1,11);
         //thought it was gonna be way more of a hastle to get namespaces to cooperate
         //i didn't realize you could do namespace.function in c# that's funky and weird
         string id = "";
@@ -46,10 +45,11 @@ public class SpellBuilder
                 tmp.mana_cost += (current.mana_adder != null)? $" {current.mana_adder} +": "";
                 tmp.mana_cost += (current.mana_multiplier != null)? $" {current.mana_multiplier} *": "";
                 tmp.cooldown += (current.cooldown_multiplier != null)? $" {current.cooldown_multiplier} *": "";
+                tmp.crit += (current.crit != null)? $" {current.crit} +": "";
                 tmp.projectile.speed += (current.speed_multiplier != null)? $" {current.speed_multiplier} *": "";
-                //modify projectile trajectory; add once but could add multiple times wouldn't do much but use more memory
-                if (current.projectile_trajectory != null && !repeats.Contains(idInArg))
-                    tmp.projectile.trajectory += current.projectile_trajectory + " ";
+                //modify projectile trajectory; given how projectiles are currently implemented this is suprisingly best
+                if (current.projectile_trajectory != null)
+                    tmp.projectile.trajectory = current.projectile_trajectory;
                 repeats.Add(idInArg);
             }else if (id != "")
                 throw new ArgumentException("Spell has two base spells; Spell modifiers should not have icons");
@@ -65,10 +65,12 @@ public class SpellBuilder
         tmp.damage.amount = spells[id].damage.amount + tmp.damage.amount;
         tmp.mana_cost = spells[id].mana_cost + tmp.mana_cost;
         tmp.cooldown = spells[id].cooldown + tmp.cooldown;
+        tmp.crit = ((spells[id].crit != null)? spells[id].crit : "0") + tmp.crit;
         //projectile mechanics
-        tmp.projectile.trajectory += spells[id].projectile.trajectory;
+        if (tmp.projectile.trajectory == null)
+            tmp.projectile.trajectory = spells[id].projectile.trajectory;
         tmp.projectile.speed = spells[id].projectile.speed + tmp.projectile.speed;
-        tmp.projectile.lifetime = spells[id].projectile.lifetime;
+        tmp.projectile.lifetime = spells[id].projectile.lifetime?? "0";
         tmp.projectile.sprite = spells[id].projectile.sprite;
         //number of projectiles
         tmp.N = spells[id].N;
@@ -81,6 +83,7 @@ public class SpellBuilder
             tmp.secondary_projectile.speed = spells[id].secondary_projectile.speed;
             tmp.secondary_projectile.sprite = spells[id].secondary_projectile.sprite;
         }
+        Debug.Log(tmp.name);
         return new Spell(owner, tmp);
     }
 

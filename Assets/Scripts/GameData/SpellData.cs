@@ -29,6 +29,7 @@ public class SpellData
     public string angle;
     public string projectile_trajectory;
     public string knockback;
+    public string crit;
 }
 public class DamageData
 {
