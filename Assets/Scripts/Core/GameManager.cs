@@ -36,6 +36,7 @@ public class GameManager
     public EnemySpriteManager enemySpriteManager;
     public PlayerSpriteManager playerSpriteManager;
     public RelicIconManager relicIconManager;
+    public EnemySpawner enemySpawner;
 
     public float elapsedTime;
     public int enemiesKilled;
@@ -71,7 +72,7 @@ public class GameManager
     //Call this every frame during gameplay
     public void UpdateTimer()
     {
-        if (state == GameState.INWAVE || state == GameState.COUNTDOWN || state == GameState.WAVEEND)
+        if (state == GameState.INWAVE)
         {
             elapsedTime += Time.deltaTime;
         }
@@ -92,5 +93,10 @@ public class GameManager
     }
     public int GetHackRand(){
         return hackRand;
+    }
+    public uint GetWave(){
+        if (enemySpawner == null)
+            return 0;
+        return enemySpawner.GetWave();
     }
 }

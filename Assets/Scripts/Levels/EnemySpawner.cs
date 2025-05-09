@@ -45,6 +45,7 @@ public class EnemySpawner : MonoBehaviour
 
         enemiesJSON = JSONParser.Instance.LoadAsList<EnemyData>("enemies");
         waveNum = 0;
+        GameManager.Instance.enemySpawner = this;
     }
 
     // Update is called once per frame
@@ -75,15 +76,8 @@ public class EnemySpawner : MonoBehaviour
         // Give bonus points for surviving the previous wave
         if (waveNum > 1) // Only after Wave 1 (not at start)
             GameManager.Instance.waveScore += (int)((waveNum - 1) * 100);
-        // if waves arn't specified assume endless otherwise use wave total
-        // Endless mode: waves == 0
-        //if ()
-        //{
-        //    StartCoroutine(SpawnWave());
-        //    return; // Important: STOP HERE for endless mode!
-        //}
-        // Normal fixed-wave mode
-        if (waveNum < levelJSON.waves || levelJSON.waves == 0)
+        // if waves arn't specified assume some endless variant otherwise use wave total
+        if (waveNum <= levelJSON.waves || levelJSON.waves == 0)
         {
             StartCoroutine(SpawnWave());
         }

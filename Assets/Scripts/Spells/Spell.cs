@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using System;
 public class Spell 
 {
     public float last_cast;
@@ -18,16 +19,24 @@ public class Spell
     public float knockback;
     public ProjectileData projectile;
     public ProjectileData secondary_projectile;
+    public bool crit;
 
-    public Spell(SpellCaster owner)
+    public Spell(SpellCaster owner, SpellData data)
     {
+        uint waveNum = GameManager.Instance.GetWave();
+        Dictionary<string, float> vars = new Dictionary<string, float>{{ "wave", waveNum }, {"power", 20}};
         //debug
         this.name = "Bolt";
         this.mana_cost = 10;
-        this.damage = 100;
+        Debug.LogWarning(data.damage.amount);
+        this.damage = Convert.ToInt32(RPNParser.Instance.DoParse(data.damage.amount, vars));
         this.cooldown = 0.75f;
         this.icon = 0;
         //debug end
+        //this.name = data.name;
+        //this.mana_cost = Convert.ToInt32(RPNParser.Instance.DoParse(data.mana_cost));
+        //this.cooldown = RPNParser.Instance.DoParse(data.cooldown);
+        //this.icon = data.icon;
         this.owner = owner;
     }
 

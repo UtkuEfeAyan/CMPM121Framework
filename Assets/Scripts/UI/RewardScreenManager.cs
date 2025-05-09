@@ -38,11 +38,11 @@ public class RewardScreenManager : MonoBehaviour
         {
             rewardScreen.SetActive(true);
                 rewardStatsText.text =
-                "Waves survived: " + GetWaveNumber() + "\n" +
-                "Time elapsed: " + (GameManager.Instance.elapsedTime).ToString("F1") + " seconds\n" +
-                "Enemies killed: " + GameManager.Instance.enemiesKilled + "\n" +
+                "Waves survived:    " + GetWaveNumber() + "\n" +
+                "Time alive:        " + (GameManager.Instance.elapsedTime).ToString("F1") + " seconds\n" +
+                "Enemies killed:    " + GameManager.Instance.enemiesKilled + "\n" +
                 "Projectiles fired: " + GameManager.Instance.projectilesFired + "\n" +
-                "Wave score: " + GameManager.Instance.waveScore;
+                "Wave score:        " + GameManager.Instance.waveScore;
 
         }
         else

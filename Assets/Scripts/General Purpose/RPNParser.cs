@@ -24,6 +24,8 @@ public class RPNParser : MonoBehaviour
 		Stack<float> stack = new Stack<float>();
 		//super wasteful memory-wise but uh :)
 		Stack<bool> isIntStack = new Stack<bool>();
+		if (str == "")
+			throw new ArgumentException("Empty string");
   
 		//warning: extremely unoptimized (but super safe)
 		for (int i = 0; i < str.Length; i ++){
@@ -57,8 +59,12 @@ public class RPNParser : MonoBehaviour
 			if (!(isInt || isFlt || isVar || isOpp))
 				throw new ArgumentException("Invalid character at index ["+i+"] in expression \""+str+"\"");
 			fltFromStr = intFromStr / fltDivisor;
+			if (substr == "")
+				throw new ArgumentException("Too many spaces");
 			//push to stack
 			if (isVar){
+				if (variables == null)
+				    throw new ArgumentException("Variable found but no dictionary passed");
 				if (!variables.ContainsKey(substr))
 				    throw new ArgumentException("Variable name \""+substr+"\" not in passed dictionary");
 				fltFromStr = variables[substr];

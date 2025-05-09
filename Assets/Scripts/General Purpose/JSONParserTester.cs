@@ -70,7 +70,10 @@ public class JSONParserTester : MonoBehaviour
         //Debug.Log($"Successfully loaded {} spells!");
         foreach (string spellID in spells.Keys)
         {
-            Debug.Log($"Name: {spells[spellID].name}, Description: {spells[spellID].description}");
+            string amount = "";
+            if (spells[spellID].damage != null)
+                amount = spells[spellID].damage.amount;
+            Debug.Log($"Name: {spells[spellID].name}, Description: {spells[spellID].description}, Icon: {spells[spellID].icon}, Damage: {amount}");
         }
     }
 }
