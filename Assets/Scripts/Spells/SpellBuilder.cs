@@ -57,17 +57,23 @@ public class SpellBuilder
                 id = idInArg;
         }
         //what a mess
+        //visual information
         tmp.name += spells[id].name;
         tmp.description = spells[id].description + tmp.description;
+        tmp.icon = spells[id].icon;
+        //stats
         tmp.damage.amount = spells[id].damage.amount + tmp.damage.amount;
         tmp.mana_cost = spells[id].mana_cost + tmp.mana_cost;
         tmp.cooldown = spells[id].cooldown + tmp.cooldown;
+        //projectile mechanics
         tmp.projectile.trajectory += spells[id].projectile.trajectory;
         tmp.projectile.speed = spells[id].projectile.speed + tmp.projectile.speed;
         tmp.projectile.lifetime = spells[id].projectile.lifetime;
         tmp.projectile.sprite = spells[id].projectile.sprite;
+        //number of projectiles
         tmp.N = spells[id].N;
         //ive hardly done any memory conservation but here have a crumb
+        //secondary projectile
         if (spells[id].secondary_projectile != null){
             tmp.secondary_projectile = new ProjectileData();
             tmp.secondary_projectile.trajectory = spells[id].secondary_projectile.trajectory;
@@ -75,7 +81,6 @@ public class SpellBuilder
             tmp.secondary_projectile.speed = spells[id].secondary_projectile.speed;
             tmp.secondary_projectile.sprite = spells[id].secondary_projectile.sprite;
         }
-        Debug.LogWarning(tmp.mana_cost);
         return new Spell(owner, tmp);
     }
 

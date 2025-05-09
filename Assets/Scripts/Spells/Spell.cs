@@ -25,18 +25,12 @@ public class Spell
     {
         uint waveNum = GameManager.Instance.GetWave();
         Dictionary<string, float> vars = new Dictionary<string, float>{{ "wave", waveNum }, {"power", 20}};
-        //debug
-        this.name = "Bolt";
-        this.mana_cost = 10;
-        Debug.LogWarning(data.damage.amount);
+        this.name = data.name;
+        this.description = data.description;
+        this.mana_cost = Convert.ToInt32(RPNParser.Instance.DoParse(data.mana_cost, vars));
         this.damage = Convert.ToInt32(RPNParser.Instance.DoParse(data.damage.amount, vars));
-        this.cooldown = 0.75f;
-        this.icon = 0;
-        //debug end
-        //this.name = data.name;
-        //this.mana_cost = Convert.ToInt32(RPNParser.Instance.DoParse(data.mana_cost));
-        //this.cooldown = RPNParser.Instance.DoParse(data.cooldown);
-        //this.icon = data.icon;
+        this.cooldown = Convert.ToInt32(RPNParser.Instance.DoParse(data.cooldown, vars));
+        this.icon = data.icon;
         this.owner = owner;
     }
 
