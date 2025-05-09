@@ -8,18 +8,21 @@ public class Spell
     public float last_cast;
     public SpellCaster owner;
     public Hittable.Team team;
-    public string name;
-    public string description;
-    public int icon;
-    public int N;
-    public int damage;
-    public int secondary_damage;
-    public int mana_cost;
-    public float cooldown;
-    public float knockback;
-    public float lifetime;
-    public ProjectileData secondary_projectile;
-    public int crit;
+    private string name;
+    private string description;
+    private int icon;
+    private int N;
+    private int damage;
+    private int secondary_damage;
+    private int mana_cost;
+    private float cooldown;
+    private float knockback;
+    private float lifetime;
+    private string trajectory;
+    private float speed;
+    private int sprite;
+    private ProjectileData secondary_projectile;
+    private int crit;
 
     public Spell(SpellCaster owner, SpellData data)
     {
@@ -34,6 +37,9 @@ public class Spell
         this.icon = data.icon;
         this.owner = owner;
         this.lifetime = RPNParser.Instance.DoParse(data.projectile.lifetime, vars);
+        this.trajectory = data.projectile.trajectory;
+        this.sprite = data.projectile.sprite;
+        this.speed = RPNParser.Instance.DoParse(data.projectile.speed, vars);
     }
 
     public string GetName()
@@ -70,9 +76,9 @@ public class Spell
     {
         this.team = team;
         if (this.lifetime == 0)
-            GameManager.Instance.projectileManager.CreateProjectile(0, "straight", where, target - where, 15f, OnHit);
+            GameManager.Instance.projectileManager.CreateProjectile(this.sprite, this.trajectory, where, target - where, this.speed, OnHit);
         else 
-            GameManager.Instance.projectileManager.CreateProjectile(0, "straight", where, target - where, 15f, OnHit, this.lifetime);
+            GameManager.Instance.projectileManager.CreateProjectile(this.sprite, this.trajectory, where, target - where, this.speed, OnHit, this.lifetime);
         yield return new WaitForEndOfFrame();
     }
 
