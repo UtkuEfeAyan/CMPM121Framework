@@ -1,5 +1,5 @@
 [
-   {   
+    {   
        "name": "Easy",
        "waves": 10,
        "spawns": [
@@ -25,16 +25,16 @@
                 "location": "random bone"
             },       
             {
-                "enemy": "great slime",   // new enemy
+                "enemy": "great slime", 
                 "count": "2 wave 3 / +",
                 "hp": "base 5 wave * +",
                 "delay": "3",
                 "sequence": [1],
                 "location": "random green"
             }
-       ]
-   },
-   {   
+        ]
+    },
+    {   
        "name": "Medium",
        "waves": 15,
        "spawns": [
@@ -43,14 +43,14 @@
                 "count": "5 wave 2 * +",
                 "hp": "25 wave *",
                 "delay": "2",
-                "sequence": [ 1, 2, 3 ],
+                "sequence": [1, 2, 3],
                 "location": "random"
             },
             {
                 "enemy": "skeleton",
                 "count": "wave 2 /",
                 "hp": "25 wave *",
-                "sequence": [ 2, 2 ],
+                "sequence": [2, 2],
                 "location": "random red"
             },
             {
@@ -61,24 +61,24 @@
                 "location": "random bone"
             },
             {
-                "enemy": "great slime", //new enemy
+                "enemy": "great slime", 
                 "count": "3 wave 2 / +",
                 "hp": "base 5 wave * +",
                 "delay": "3",
-                "sequence": [ 1, 1],
+                "sequence": [2, 1],
                 "location": "random green"
             },
             {
-                "enemy": "slate", //new enemy
+                "enemy": "slate", 
                 "count": "wave 2 /",
-                "hp": "base 100 wave * +", // multiplier can be 50 as well
+                "hp": "base 100 wave * +",
                 "delay": "3",
-                "sequence": [ 2 ],
+                "sequence": [2],
                 "location": "random"
             }
-       ]
-   },
-   {   
+        ]
+    },
+    {   
         "name": "Endless",
         "spawns": [
             {
@@ -86,14 +86,14 @@
                 "count": "5 wave 3 * +",
                 "hp": "15 wave *",
                 "delay": "3",
-                "sequence": [ 1, 2, 3 ],
+                "sequence": [1, 2, 3],
                 "location": "random"
             },
             {
                 "enemy": "skeleton",
                 "count": "wave 4 /",
                 "hp": "20 wave *",
-                "sequence": [ 2, 2 ],
+                "sequence": [2, 2],
                 "location": "random red"
             },
             {
@@ -104,22 +104,35 @@
                 "location": "random bone"
             },
             {
-                "enemy": "great slime", //new enemy
+                "enemy": "great slime", 
                 "count": "2 wave 4 / +",
                 "hp": "base 5 wave * +",
                 "delay": "3",
-                "sequence": [ 1, 1 ],
+                "sequence": [2, 1],
                 "location": "random green"
             },
             {
-                "enemy": "slate", //new enemy
+                "enemy": "slate", 
                 "count": "wave 2 /",
-                "hp": "base 50 wave * +", // multiplier can be 25 or 100 as well
+                "hp": "base 50 wave * +", 
                 "delay": "3",
-                "sequence": [ 1, 1 ],
+                "sequence": [1, 1, 2],
                 "location": "random"
             } 
 
-         ]
-   }
+        ]
+    },
+    {   
+       "name": "Debug",
+       "waves": 2,
+       "spawns": [
+            {
+                "enemy": "slate",
+                "count": "wave 2 /",
+                "hp": "base 50 wave * +",
+                "delay": "3",
+                "location": "random"
+            } 
+        ]
+    }
 ]

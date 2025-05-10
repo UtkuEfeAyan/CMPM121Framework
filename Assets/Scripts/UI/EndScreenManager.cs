@@ -36,7 +36,7 @@ public class EndScreenManager : MonoBehaviour
 
             statsText.text =
                 "Waves survived: " + GetWaveNumber() + "\n" +
-                "Time elapsed: " + (GameManager.Instance.elapsedTime).ToString("F1") + " seconds\n" +
+                "Time alive: " + (GameManager.Instance.elapsedTime).ToString("F1") + " seconds\n" +
                 "Enemies killed: " + GameManager.Instance.enemiesKilled + "\n" +
                 "Projectiles fired: " + GameManager.Instance.projectilesFired + "\n" +
                 "Wave score: " + GameManager.Instance.waveScore;
@@ -53,7 +53,7 @@ public class EndScreenManager : MonoBehaviour
     }
     int GetWaveNumber()
     {
-        return (int)FindFirstObjectByType< EnemySpawner >().GetWave();
+        return (int)GameManager.Instance.GetWave();
     }
 
     int CalculateScore()

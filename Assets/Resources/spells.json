@@ -48,7 +48,7 @@
     },
     "speed_amp": {
         "name": "Speed-Amplified",
-        "description": "Faster projectile speed",
+        "description": "Faster projectile speed.",
         "speed_multiplier": "1.75"
     },
     "doubler": {
@@ -79,7 +79,7 @@
     },
     "burst": {
         "name": "Bursting",
-        "description": "Spell applies +60 units/sec of knockback to target. Note: if you are hit with your own projectile, the knockback is applied to you.",
+        "description": "Spell applies knockback to target (target can be self).",
         "knockback": "1"
     },
     "hefty": {
@@ -87,5 +87,11 @@
         "description": "Significantly increased damage, but projectile speed is reduced by 60%.",
         "speed_multiplier": "0.4",
         "damage_multiplier": "2 wave 5 / +"
+    },
+    "wild": {
+        "name": "Wild",
+        "description": "Spell is cast in a squiggly line, and the projectile occasionally does significantly more damage.",
+        "projectile_trajectory": "squiggly",
+        "crit": "5"
     }
 }

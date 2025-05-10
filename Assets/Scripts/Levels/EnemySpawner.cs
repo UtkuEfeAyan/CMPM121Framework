@@ -21,28 +21,31 @@ public class EnemySpawner : MonoBehaviour
     private uint waveNum;
     //current difficulty information; only loaded from file once
     private LevelData levelJSON;
+    private List<LevelData> levelsJSON;
     //every enemy; only loaded from file once
     private List<EnemyData> enemiesJSON;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //unity makes me dizzy
-        GameObject selector0 = Instantiate(button, level_selector.transform);
-        selector0.transform.localPosition = new Vector3(0, 130);
-        selector0.GetComponent<MenuSelectorController>().spawner = this;
-        selector0.GetComponent<MenuSelectorController>().SetLevel("Easy");
-        GameObject selector1 = Instantiate(button, level_selector.transform);
-        selector1.transform.localPosition = new Vector3(0, 0);
-        selector1.GetComponent<MenuSelectorController>().spawner = this;
-        selector1.GetComponent<MenuSelectorController>().SetLevel("Medium");
-        GameObject selector2 = Instantiate(button, level_selector.transform);
-        selector2.transform.localPosition = new Vector3(0, -130);
-        selector2.GetComponent<MenuSelectorController>().spawner = this;
-        selector2.GetComponent<MenuSelectorController>().SetLevel("Endless");
+        levelsJSON = JSONParser.Instance.LoadAsList<LevelData>("levels");
+        int i = 0;
+        int denominator = (levelsJSON.Count-1);
+        if  (denominator == 0){
+            denominator = 2;
+            i = 1;
+        }
+        foreach (var iter in levelsJSON){
+            GameObject selector = Instantiate(button, level_selector.transform);
+            selector.transform.localPosition = new Vector3(0, 130-260*i/denominator);
+            selector.GetComponent<MenuSelectorController>().spawner = this;
+            selector.GetComponent<MenuSelectorController>().SetLevel(iter.name);
+            i ++;
+        }
 
         enemiesJSON = JSONParser.Instance.LoadAsList<EnemyData>("enemies");
         waveNum = 0;
+        GameManager.Instance.enemySpawner = this;
     }
 
     // Update is called once per frame
@@ -53,7 +56,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void StartLevel(string levelname)
     {
-        var levelsJSON = JSONParser.Instance.LoadAsList<LevelData>("levels");
+        //var levelsJSON = JSONParser.Instance.LoadAsList<LevelData>("levels");
         foreach (var iter in levelsJSON){
             if (iter.name == levelname)
                 levelJSON = iter;
@@ -73,15 +76,8 @@ public class EnemySpawner : MonoBehaviour
         // Give bonus points for surviving the previous wave
         if (waveNum > 1) // Only after Wave 1 (not at start)
             GameManager.Instance.waveScore += (int)((waveNum - 1) * 100);
-        // if waves arn't specified assume endless otherwise use wave total
-        // Endless mode: waves == 0
-        if (levelJSON.waves == 0)
-        {
-            StartCoroutine(SpawnWave());
-            return; // Important: STOP HERE for endless mode!
-        }
-        // Normal fixed-wave mode
-        if (waveNum < levelJSON.waves)
+        // if waves arn't specified assume some endless variant otherwise use wave total
+        if (waveNum <= levelJSON.waves || levelJSON.waves == 0)
         {
             StartCoroutine(SpawnWave());
         }

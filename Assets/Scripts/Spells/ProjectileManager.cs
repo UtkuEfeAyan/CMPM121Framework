@@ -38,19 +38,16 @@ public class ProjectileManager : MonoBehaviour
 
     public ProjectileMovement MakeMovement(string name, float speed)
     {
-        if (name == "straight")
-        {
-            return new StraightProjectileMovement(speed);
-        }
-        if (name == "homing")
-        {
-            return new HomingProjectileMovement(speed);
-        }
-        if (name == "spiraling")
-        {
-            return new SpiralingProjectileMovement(speed);
+        switch (name){
+            case ("straight"):
+                return new StraightProjectileMovement(speed);
+            case ("homing"):
+                return new HomingProjectileMovement(speed);
+            case ("squiggly"):
+                return new SquigglyProjectileMovement(speed);
+            case ("spiraling"):
+                return new SpiralingProjectileMovement(speed);
         }
         return null;
     }
-
 }
