@@ -799,10 +799,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2241b04a7862be447a62c9acb60823e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 334187435}
+  icon: {fileID: 0}
+  cooldown: {fileID: 0}
   manacost: {fileID: 11042825}
   damage: {fileID: 757752468}
   highlight: {fileID: 279594428}
+  dropbutton: {fileID: 0}
 --- !u!114 &96316930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2744,10 +2746,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2241b04a7862be447a62c9acb60823e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 1298929770}
+  icon: {fileID: 0}
+  cooldown: {fileID: 0}
   manacost: {fileID: 532755681}
   damage: {fileID: 1860547075}
   highlight: {fileID: 1477215737}
+  dropbutton: {fileID: 0}
 --- !u!114 &457295005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4053,10 +4057,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2241b04a7862be447a62c9acb60823e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 1218915918}
+  icon: {fileID: 0}
+  cooldown: {fileID: 0}
   manacost: {fileID: 2070572078}
   damage: {fileID: 989605413}
   highlight: {fileID: 12506828}
+  dropbutton: {fileID: 0}
 --- !u!114 &797691356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7167,6 +7173,7 @@ RectTransform:
   m_Children:
   - {fileID: 157840928}
   - {fileID: 284566017}
+  - {fileID: 2056730689}
   m_Father: {fileID: 2021125305}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -58054,7 +58061,6 @@ RectTransform:
   - {fileID: 2007398912}
   - {fileID: 1982188284}
   - {fileID: 1115058367}
-  - {fileID: 2056730689}
   - {fileID: 1709288114}
   - {fileID: 9202096}
   m_Father: {fileID: 0}
@@ -58107,10 +58113,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2241b04a7862be447a62c9acb60823e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 824291580}
+  icon: {fileID: 0}
+  cooldown: {fileID: 0}
   manacost: {fileID: 1206570428}
   damage: {fileID: 1239312810}
   highlight: {fileID: 310609714}
+  dropbutton: {fileID: 0}
 --- !u!224 &2056730689
 RectTransform:
   m_ObjectHideFlags: 0
@@ -58131,7 +58139,7 @@ RectTransform:
   - {fileID: 1206570426}
   - {fileID: 1239312808}
   - {fileID: 367653251}
-  m_Father: {fileID: 2021125305}
+  m_Father: {fileID: 1709288114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -58415,10 +58423,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2241b04a7862be447a62c9acb60823e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 1727109219}
+  icon: {fileID: 0}
+  cooldown: {fileID: 0}
   manacost: {fileID: 400786126}
   damage: {fileID: 982783696}
   highlight: {fileID: 1270515289}
+  dropbutton: {fileID: 0}
 --- !u!114 &2085212186
 MonoBehaviour:
   m_ObjectHideFlags: 0
