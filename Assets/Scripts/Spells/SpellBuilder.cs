@@ -20,7 +20,7 @@ public class SpellBuilder
         //https://docs.google.com/spreadsheets/d/1X-_UfeW2mAwUQv6uW-ZxrBZj2EktS3KD1O0_uItuPJ0/edit?usp=sharing
         int maxMods = UnityEngine.Random.Range(0,21)/UnityEngine.Random.Range(1,11);
         //thought it was gonna be way more of a hastle to get namespaces to cooperate
-        //i didn't realize you could do namespace.function in c# that's funky and weird
+        //i didn't realize you could do namespace.function in c# that's funky and weird (efe:its c# its also unity c# aso funky and weird is the norm)
         string id = "";
         List<string> repeats = new List<string>();
         //if idWithMods is not a passed arg generate idWithMods randomly
