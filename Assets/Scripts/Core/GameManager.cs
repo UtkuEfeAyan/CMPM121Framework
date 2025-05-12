@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class GameManager 
+public class GameManager : MonoBehaviour
 {
     public enum GameState
     {
@@ -13,24 +13,11 @@ public class GameManager
         COUNTDOWN,
         GAMEOVER
     }
+
     public GameState state;
-
     public int countdown;
-    private static GameManager theInstance;
-    private int hackRand;
-    public static GameManager Instance {  get
-        {
-            if (theInstance == null){
-                theInstance = new GameManager();
-                theInstance.hackRand = 0;
-            }
-            theInstance.hackRand ++;
-            return theInstance;
-        }
-    }
-
     public GameObject player;
-    
+
     public ProjectileManager projectileManager;
     public SpellIconManager spellIconManager;
     public EnemySpriteManager enemySpriteManager;
@@ -43,23 +30,40 @@ public class GameManager
     public int projectilesFired;
     public int waveScore; // This will be your total score
 
+    private int hackRand = 0;
+
     private List<GameObject> enemies;
     public int enemy_count { get { return enemies.Count; } }
+
+    public static GameManager Instance { get; private set; }
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        Instance = this;
+        enemies = new List<GameObject>();
+        DontDestroyOnLoad(this.gameObject); // Optional: persist across scenes
+    }
 
     public void AddEnemy(GameObject enemy)
     {
         enemies.Add(enemy);
     }
+
     public void RemoveEnemy(GameObject enemy)
     {
         enemies.Remove(enemy);
-        enemiesKilled++; // Increment enemies killed
-
+        enemiesKilled++;
 
         var ec = enemy.GetComponent<EnemyController>();
         if (ec != null)
         {
-            waveScore += ec.score; // Add enemy score when enemy is killed
+            waveScore += ec.score;
         }
     }
 
@@ -67,9 +71,9 @@ public class GameManager
     {
         if (enemies == null || enemies.Count == 0) return null;
         if (enemies.Count == 1) return enemies[0];
-        return enemies.Aggregate((a,b) => (a.transform.position - point).sqrMagnitude < (b.transform.position - point).sqrMagnitude ? a : b);
+        return enemies.Aggregate((a, b) => (a.transform.position - point).sqrMagnitude < (b.transform.position - point).sqrMagnitude ? a : b);
     }
-    //Call this every frame during gameplay
+
     public void UpdateTimer()
     {
         if (state == GameState.INWAVE)
@@ -77,24 +81,24 @@ public class GameManager
             elapsedTime += Time.deltaTime;
         }
     }
-    private GameManager()
-    {
-        enemies = new List<GameObject>();
-    }
-    // added to fix the bug of enemeis left keeepingthe count of enemeis after reset
+
     public void ResetGameManager()
     {
         enemies.Clear();
         elapsedTime = 0;
         enemiesKilled = 0;
         projectilesFired = 0;
-        waveScore = 0; //Reset score too
+        waveScore = 0;
         state = GameState.PREGAME;
     }
-    public int GetHackRand(){
-        return hackRand;
+
+    public int GetHackRand()
+    {
+        return ++hackRand;
     }
-    public uint GetWave(){
+
+    public uint GetWave()
+    {
         if (enemySpawner == null)
             return 0;
         return enemySpawner.GetWave();

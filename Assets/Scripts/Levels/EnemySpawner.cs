@@ -63,6 +63,10 @@ public class EnemySpawner : MonoBehaviour
         }
         level_selector.gameObject.SetActive(false);
         // this is not nice: we should not have to be required to tell the player directly that the level is starting
+        Debug.Log("EnemySpawner.StartLevel triggered with levelname = " + levelname);
+        Debug.Log("Is GameManager.Instance null? " + (GameManager.Instance == null));
+        Debug.Log("Is GameManager.Instance.enemySpawner null? " + (GameManager.Instance.enemySpawner == null));
+
         GameManager.Instance.player.GetComponent<PlayerController>().StartLevel();
         //Play appropriate music!
         MusicManager.Instance.PlayMusicForDifficulty(levelname);
