@@ -8,21 +8,9 @@ using UnityEngine.TextCore.Text;
 using Newtonsoft.Json;
 using UnityTextAsset = UnityEngine.TextAsset;
 
-public class JSONParser : MonoBehaviour
+public class JSONParser
 {
-    public static JSONParser Instance { get; private set; }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(this.gameObject);
-    }
-    public JToken LoadAsJToken(string resourceDataName)
+    public static JToken LoadAsJToken(string resourceDataName)
     {
         UnityTextAsset jsonText = Resources.Load<UnityTextAsset>(resourceDataName);
         if (jsonText == null)
@@ -42,7 +30,7 @@ public class JSONParser : MonoBehaviour
         }
     }
 
-    public List<T> LoadAsList<T>(string resourceDataName)
+    public static List<T> LoadAsList<T>(string resourceDataName)
     {
         UnityTextAsset jsonText = Resources.Load<UnityTextAsset>(resourceDataName);
         if (jsonText == null)
@@ -62,7 +50,7 @@ public class JSONParser : MonoBehaviour
         }
     }
 
-    public Dictionary<KeyType, T> LoadAsDictionary<KeyType, T>(string resourceDataName)
+    public static Dictionary<KeyType, T> LoadAsDictionary<KeyType, T>(string resourceDataName)
     {
         UnityTextAsset jsonText = Resources.Load<UnityTextAsset>(resourceDataName);
         if (jsonText == null)

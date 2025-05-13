@@ -6,7 +6,7 @@ using TMPro;
 
 public class SpellUI : MonoBehaviour
 {
-    public Image icon;
+    public GameObject icon;
     public RectTransform cooldown;
     public TextMeshProUGUI manacost;
     public TextMeshProUGUI damage;
@@ -24,12 +24,6 @@ public class SpellUI : MonoBehaviour
 
     public void SetSpell(Spell spell)
     {
-        if (spell == null || GameManager.Instance == null || GameManager.Instance.spellIconManager == null)
-        {
-            Debug.LogWarning("SpellUI.SetSpell was given an invalid or incomplete spell.");
-            return;
-        }
-
         currentSpell = spell;
 
         if (icon != null)

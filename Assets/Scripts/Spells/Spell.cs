@@ -31,16 +31,16 @@ public class Spell
         Dictionary<string, float> vars = new Dictionary<string, float>{{ "wave", waveNum }, {"power", 20}};
         this.name = data.name;
         this.description = data.description;
-        this.mana_cost = Convert.ToInt32(RPNParser.Instance.DoParse(data.mana_cost, vars));
-        this.damage = Convert.ToInt32(RPNParser.Instance.DoParse(data.damage.amount, vars));
-        this.cooldown = Convert.ToInt32(RPNParser.Instance.DoParse(data.cooldown, vars));
-        this.crit = Convert.ToInt32(RPNParser.Instance.DoParse(data.crit, vars));
+        this.mana_cost = Convert.ToInt32(RPNParser.DoParse(data.mana_cost, vars));
+        this.damage = Convert.ToInt32(RPNParser.DoParse(data.damage.amount, vars));
+        this.cooldown = Convert.ToInt32(RPNParser.DoParse(data.cooldown, vars));
+        this.crit = Convert.ToInt32(RPNParser.DoParse(data.crit, vars));
         this.icon = data.icon;
         this.owner = owner;
-        this.lifetime = RPNParser.Instance.DoParse(data.projectile.lifetime, vars);
+        this.lifetime = RPNParser.DoParse(data.projectile.lifetime, vars);
         this.trajectory = data.projectile.trajectory;
         this.sprite = data.projectile.sprite;
-        this.speed = RPNParser.Instance.DoParse(data.projectile.speed, vars);
+        this.speed = RPNParser.DoParse(data.projectile.speed, vars);
     }
 
     public string GetName()

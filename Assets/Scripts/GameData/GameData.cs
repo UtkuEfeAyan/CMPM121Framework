@@ -27,7 +27,7 @@ public class GameData : MonoBehaviour
 
     private void LoadEnemies()
     {
-        var enemyList = JSONParser.Instance.LoadAsList<EnemyData>("enemies");
+        var enemyList = JSONParser.LoadAsList<EnemyData>("enemies");
         if (enemyList == null)
         {
             Debug.LogError("GameData: Failed to load enemies.");
@@ -47,7 +47,7 @@ public class GameData : MonoBehaviour
 
     private void LoadLevels()
     {
-        var levelList = JSONParser.Instance.LoadAsList<LevelData>("levels");
+        var levelList = JSONParser.LoadAsList<LevelData>("levels");
         if (levelList == null)
         {
             Debug.LogError("GameData: Failed to load levels.");

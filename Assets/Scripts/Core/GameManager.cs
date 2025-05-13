@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class GameManager : MonoBehaviour
+public class GameManager
 {
     public enum GameState
     {
@@ -11,9 +11,11 @@ public class GameManager : MonoBehaviour
         INWAVE,
         WAVEEND,
         COUNTDOWN,
-        GAMEOVER
+        GAMEOVER,
+        VICTORY
     }
 
+    private static GameManager theInstance;
     public GameState state;
     public int countdown;
     public GameObject player;
@@ -29,25 +31,20 @@ public class GameManager : MonoBehaviour
     public int enemiesKilled;
     public int projectilesFired;
     public int waveScore; // This will be your total score
-
-    private int hackRand = 0;
-
     private List<GameObject> enemies;
     public int enemy_count { get { return enemies.Count; } }
 
-    public static GameManager Instance { get; private set; }
-
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
+    public static GameManager Instance {  get
         {
-            Destroy(this.gameObject);
-            return;
+            if (theInstance == null){
+                theInstance = new GameManager();
+            }
+            return theInstance;
         }
-
-        Instance = this;
+    }
+    private GameManager()
+    {
         enemies = new List<GameObject>();
-        DontDestroyOnLoad(this.gameObject); // Optional: persist across scenes
     }
 
     public void AddEnemy(GameObject enemy)
@@ -91,12 +88,6 @@ public class GameManager : MonoBehaviour
         waveScore = 0;
         state = GameState.PREGAME;
     }
-
-    public int GetHackRand()
-    {
-        return ++hackRand;
-    }
-
     public uint GetWave()
     {
         if (enemySpawner == null)

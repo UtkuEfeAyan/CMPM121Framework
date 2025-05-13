@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
         hp.OnDeath += Die;
         EventBus.Instance.OnDamage += OnDamage;
         healthui.SetHealth(hp);
-        myRand = GameManager.Instance.GetHackRand();
+        myRand = UnityEngine.Random.Range(0,314);
     }
 
     // Update is called once per frame
@@ -85,16 +85,16 @@ public class EnemyController : MonoBehaviour
         GetComponent<Collider2D>().enabled = false;
         Vector3 pos3 = GetComponent<Unit>().transform.position;
         Vector2 pos = new Vector2(pos3.x,pos3.y);
-        Vector2 displace = new Vector2(-0.4f,-0.4f);
-        //if (Physics2D.OverlapArea(pos+displace,pos-displace) != null)
-        //    Debug.Log(GetComponent<Unit>().transform.position);
-        for (int i = 0; (Physics2D.OverlapArea(pos+displace,pos-displace) != null) && (i < 300); i++){
-            float tempA = i + myRand;
-            float tempX = Mathf.Cos(tempA)*i*0.3f;
-            float tempY = Mathf.Sin(tempA)*i*0.3f;
-            GetComponent<Unit>().transform.position = pos3 + new Vector3(tempX, tempY, 0);
-            pos += new Vector2(tempX, tempY);
-        }
+        Vector2 a = new Vector2(-0.499f,-0.499f);
+        Vector2 b = new Vector2(-0.6f,-0.6f);
+        if (Physics2D.OverlapArea(pos-a,pos+a) != null)
+            for (int i = 0; (Physics2D.OverlapArea(pos-b,pos+b) != null) && (i < 300); i++){
+                float tempA = i + myRand;
+                float tempX = Mathf.Cos(tempA)*i*0.3f;
+                float tempY = Mathf.Sin(tempA)*i*0.3f;
+                GetComponent<Unit>().transform.position = pos3 + new Vector3(tempX, tempY, 0);
+                pos += new Vector2(tempX, tempY);
+            }
         GetComponent<Collider2D>().enabled = true;
     }
 }

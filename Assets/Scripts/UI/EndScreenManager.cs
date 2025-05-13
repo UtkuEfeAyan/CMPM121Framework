@@ -14,18 +14,11 @@ public class EndScreenManager : MonoBehaviour
     {
         if (shown) return;
 
-        if (GameManager.Instance == null || GameManager.Instance.player == null)
-            return;
-
-        var playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-        if (playerController == null || playerController.hp == null)
-            return;
-
-        if (GameManager.Instance.state == GameManager.GameState.GAMEOVER)
+        if (GameManager.Instance.state == GameManager.GameState.GAMEOVER || GameManager.Instance.state == GameManager.GameState.VICTORY)
         {
             gameOverPanel.SetActive(true);
 
-            if (playerController.hp.hp <= 0)
+            if (GameManager.Instance.state == GameManager.GameState.GAMEOVER)
             {
                 resultText.text = "Game Over!";
             }
@@ -47,8 +40,7 @@ public class EndScreenManager : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        if (GameManager.Instance != null)
-            GameManager.Instance.ResetGameManager();
+        GameManager.Instance.ResetGameManager();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     int GetWaveNumber()
