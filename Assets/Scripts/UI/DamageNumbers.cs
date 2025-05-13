@@ -3,6 +3,7 @@ using UnityEngine;
 public class DamageNumbers : MonoBehaviour
 {
     public GameObject DamageNumber;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

@@ -17,14 +17,10 @@ public class GameManager
 
     public int countdown;
     private static GameManager theInstance;
-    private int hackRand;
     public static GameManager Instance {  get
         {
-            if (theInstance == null){
+            if (theInstance == null)
                 theInstance = new GameManager();
-                theInstance.hackRand = 0;
-            }
-            theInstance.hackRand ++;
             return theInstance;
         }
     }
@@ -90,9 +86,6 @@ public class GameManager
         projectilesFired = 0;
         waveScore = 0; //Reset score too
         state = GameState.PREGAME;
-    }
-    public int GetHackRand(){
-        return hackRand;
     }
     public uint GetWave(){
         if (enemySpawner == null)

@@ -8,19 +8,15 @@ using UnityEngine.TextCore.Text;
 using Newtonsoft.Json;
 using UnityTextAsset = UnityEngine.TextAsset;
 
-public class JSONParser : MonoBehaviour
+public class JSONParser
 {
-    public static JSONParser Instance { get; private set; }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
+    private static JSONParser theInstance;
+    public static JSONParser Instance {  get
         {
-            Destroy(this.gameObject);
-            return;
+            if (theInstance == null)
+                theInstance = new JSONParser();
+            return theInstance;
         }
-        Instance = this;
-        DontDestroyOnLoad(this.gameObject);
     }
     public JToken LoadAsJToken(string resourceDataName)
     {

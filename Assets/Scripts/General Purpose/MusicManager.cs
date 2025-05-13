@@ -73,7 +73,7 @@ public class MusicManager : MonoBehaviour
     //create a smoother beginig for the music
     private IEnumerator FadeInMusic(AudioClip clip, float duration)
     {
-        audioSource.Stop();          // Stop any previous music safely
+        audioSource.Stop(); // Stop any previous music safely
         audioSource.clip = clip;
         audioSource.volume = 0f;
         audioSource.loop = true;
