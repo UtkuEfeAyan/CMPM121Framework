@@ -14,15 +14,40 @@ public class SpellUIContainer : MonoBehaviour
 
     public void UpdateHighlight(int selectedIndex)
     {
-        if (lastHighlight >= 0 && lastHighlight < spellUIs.Length)
+        // Validate array bounds first
+        if (selectedIndex < 0 || selectedIndex >= spellUIs.Length)
         {
-            spellUIs[lastHighlight].GetComponent<SpellUI>().highlight.SetActive(false);
+            Debug.LogWarning($"Invalid spell index: {selectedIndex}");
+            return;
         }
 
-        if (selectedIndex >= 0 && selectedIndex < spellUIs.Length)
+        // Clear previous highlight
+        if (lastHighlight >= 0 && lastHighlight < spellUIs.Length)
         {
-            spellUIs[selectedIndex].GetComponent<SpellUI>().highlight.SetActive(true);
-            lastHighlight = selectedIndex;
+            var previousHighlight = spellUIs[lastHighlight]?.GetComponent<SpellUI>()?.highlight;
+            if (previousHighlight != null)
+            {
+                previousHighlight.SetActive(false);
+            }
+        }
+
+        // Set new highlight
+        var newHighlight = spellUIs[selectedIndex]?.GetComponent<SpellUI>();
+        if (newHighlight != null)
+        {
+            if (newHighlight.highlight != null)
+            {
+                newHighlight.highlight.SetActive(true);
+                lastHighlight = selectedIndex;
+            }
+            else
+            {
+                Debug.LogWarning($"No highlight object on spell slot {selectedIndex}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Missing SpellUI component on slot {selectedIndex}");
         }
     }
 

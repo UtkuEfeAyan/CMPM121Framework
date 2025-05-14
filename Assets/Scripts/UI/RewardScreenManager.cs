@@ -111,6 +111,8 @@ public class RewardScreenManager : MonoBehaviour
 
         rewardScreen.SetActive(false);
         rewardPending = false;
+
+        GameManager.Instance.player.GetComponent<PlayerController>().RefreshSpellDisplays();
     }
 
     IEnumerator HighlightSlot(SpellUI slot)
