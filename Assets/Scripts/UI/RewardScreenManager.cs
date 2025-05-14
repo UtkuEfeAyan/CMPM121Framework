@@ -1,6 +1,9 @@
+// reworked by efe
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Collections;
 
 public class RewardScreenManager : MonoBehaviour
 {
@@ -29,10 +32,6 @@ public class RewardScreenManager : MonoBehaviour
             {
                 button.onClick.AddListener(() => OnSlotSelected(slot));
             }
-            else
-            {
-                Debug.LogError("Slot missing Button component: " + slot.name);
-            }
         }
     }
 
@@ -46,37 +45,44 @@ public class RewardScreenManager : MonoBehaviour
                 rewardPending = true;
             }
         }
-        else
+        else if (rewardScreen.activeSelf)
         {
-            if (rewardScreen.activeSelf)
-            {
-                rewardScreen.SetActive(false);
-                CleanupSlots();
-                rewardPending = false;
-            }
+            rewardScreen.SetActive(false);
+            CleanupSlots();
+            rewardPending = false;
         }
     }
 
     void ShowRewardScreen()
     {
         rewardScreen.SetActive(true);
-        generatedRewardSpell = new SpellBuilder().Build(
-            GameManager.Instance.player.GetComponent<PlayerController>().spellcaster
-        );
+        GenerateRewardSpell();
         UpdateUI();
         SetSlotsInteractable(true);
+    }
+
+    void GenerateRewardSpell()
+    {
+        var builder = new SpellBuilder();
+        generatedRewardSpell = builder.Build(
+            GameManager.Instance.player.GetComponent<PlayerController>().spellcaster
+        );
     }
 
     void UpdateUI()
     {
         rewardStatsText.text = GetWaveStats();
         rewardSpellUI.SetSpell(generatedRewardSpell);
+        RefreshPlayerSlots();
+    }
 
-        // Update player spell slots
+    void RefreshPlayerSlots()
+    {
         var spellcaster = GameManager.Instance.player.GetComponent<PlayerController>().spellcaster;
         for (int i = 0; i < playerSpellSlots.Length; i++)
         {
-            playerSpellSlots[i].SetSpell(i < spellcaster.spells.Count ? spellcaster.spells[i] : null);
+            bool hasSpell = i < spellcaster.spells.Count && spellcaster.spells[i] != null;
+            playerSpellSlots[i].SetSpell(hasSpell ? spellcaster.spells[i] : null);
         }
     }
 
@@ -85,19 +91,38 @@ public class RewardScreenManager : MonoBehaviour
         int slotIndex = System.Array.IndexOf(playerSpellSlots, selectedSlot);
         if (slotIndex == -1) return;
 
-        var spellcaster = GameManager.Instance.player.GetComponent<PlayerController>().spellcaster;
+        var pc = GameManager.Instance.player.GetComponent<PlayerController>();
+        var spellcaster = pc.spellcaster;
 
-        // Replace or add spell
-        if (spellcaster.spells.Count > slotIndex)
-            spellcaster.spells[slotIndex] = generatedRewardSpell;
-        else
-            spellcaster.spells.Add(generatedRewardSpell);
+        // Ensure spell list has enough slots
+        while (spellcaster.spells.Count <= slotIndex)
+        {
+            spellcaster.spells.Add(null);
+        }
 
-        UpdateUI();
-        SetSlotsInteractable(false);
+        // Replace spell
+        spellcaster.spells[slotIndex] = generatedRewardSpell;
+
+        // Update UI immediately
+        pc.GetComponent<SpellUIContainer>().RefreshAllSpells();
+
+        // Visual feedback
+        StartCoroutine(HighlightSlot(selectedSlot));
+
         rewardScreen.SetActive(false);
         rewardPending = false;
     }
+
+    IEnumerator HighlightSlot(SpellUI slot)
+    {
+        if (slot != null && slot.highlight != null)
+        {
+            slot.highlight.SetActive(true);
+            yield return new WaitForSeconds(0.3f);
+            slot.highlight.SetActive(false);
+        }
+    }
+
 
     void SetSlotsInteractable(bool interactable)
     {

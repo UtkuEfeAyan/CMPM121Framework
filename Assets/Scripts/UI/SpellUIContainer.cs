@@ -12,23 +12,6 @@ public class SpellUIContainer : MonoBehaviour
         UpdateHighlight(0); // Start on spell 0
     }
 
-    public void RefreshAllSpells()
-    {
-        for (int i = 1; i < spellUIs.Length; i++)
-        {
-            spellUIs[i].SetActive(true); // Always show the slot
-
-            if (i < player.spellcaster.spells.Count)
-            {
-                spellUIs[i].GetComponent<SpellUI>().SetSpell(player.spellcaster.spells[i]);
-            }
-            else
-            {
-                spellUIs[i].GetComponent<SpellUI>().ClearSpell(); // Show as empty
-            }
-        }
-    }
-
     public void UpdateHighlight(int selectedIndex)
     {
         if (lastHighlight >= 0 && lastHighlight < spellUIs.Length)
@@ -42,5 +25,20 @@ public class SpellUIContainer : MonoBehaviour
             lastHighlight = selectedIndex;
         }
     }
+
+    public void RefreshAllSpells()
+    {
+        // Changed to start from 0 and handle nulls
+        for (int i = 0; i < spellUIs.Length; i++)
+        {
+            spellUIs[i].SetActive(true);
+            bool hasSpell = i < player.spellcaster.spells.Count &&
+                           player.spellcaster.spells[i] != null;
+
+            spellUIs[i].GetComponent<SpellUI>().SetSpell(hasSpell ? player.spellcaster.spells[i] : null);
+        }
+    }
+
+
 
 }

@@ -91,6 +91,18 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(spellcaster.Cast(currentSpellIndex, transform.position, mouseWorld));
         }
+
+        // Add null check and slot validation
+        if (spellcaster.spells != null &&
+            currentSpellIndex < spellcaster.spells.Count &&
+            spellcaster.spells[currentSpellIndex] != null)
+        {
+            StartCoroutine(spellcaster.Cast(currentSpellIndex, transform.position, mouseWorld));
+        }
+        else
+        {
+            Debug.Log("No spell in selected slot: " + currentSpellIndex);
+        }
     }
 
     void OnMove(InputValue value)

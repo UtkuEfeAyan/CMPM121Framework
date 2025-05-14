@@ -27,25 +27,31 @@ public class SpellUI : MonoBehaviour
         {
             currentSpell = spell;
 
-            // Add null checks
-            if (icon != null)
+
+
+        //  null checks
+        if (icon == null)
+        {
+            icon = GetComponentInChildren<Image>();
+            Debug.LogWarning("Auto-fetched icon reference on " + gameObject.name);
+        }
+
+        //  null checks
+        if (icon != null)
+        {
+            if (spell != null && GameManager.Instance.spellIconManager != null)
             {
-                if (spell != null)
-                {
-                    icon.sprite = GameManager.Instance.spellIconManager.Get(spell.GetIcon());
-                    icon.enabled = true;
-                }
-                else
-                {
-                    icon.enabled = false;
-                }
+                icon.sprite = GameManager.Instance.spellIconManager.Get(spell.GetIcon());
+                icon.enabled = true;
             }
             else
             {
-                Debug.LogError("Icon reference not set in SpellUI: " + gameObject.name);
+                icon.sprite = null;
+                icon.enabled = false;
             }
-
         }
+
+    }
     public void ClearSpell()
     {
         currentSpell = null;
@@ -95,7 +101,12 @@ public class SpellUI : MonoBehaviour
     void Update()
     {
         if (currentSpell == null)
+        {
+            if (cooldown != null)
+                cooldown.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 0);
             return;
+        }
+
 
         if (Time.time > last_text_update + UPDATE_DELAY)
         {
