@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using System;
-public class Spell 
+public class Spell
 {
     public float last_cast;
     public SpellCaster owner;
@@ -28,7 +28,7 @@ public class Spell
     public Spell(SpellCaster owner, SpellData data)
     {
         uint waveNum = GameManager.Instance.GetWave();
-        Dictionary<string, float> vars = new Dictionary<string, float>{{ "wave", waveNum }, {"power", 20}};
+        Dictionary<string, float> vars = new Dictionary<string, float> { { "wave", waveNum }, { "power", 20 } };
         this.name = data.name;
         this.description = data.description;
         this.mana_cost = Convert.ToInt32(RPNParser.Instance.DoParse(data.mana_cost, vars));
@@ -66,6 +66,8 @@ public class Spell
     public virtual int GetIcon()
     {
         return icon;
+
+
     }
 
     public bool IsReady()
@@ -78,7 +80,7 @@ public class Spell
         this.team = team;
         if (this.lifetime == 0)
             GameManager.Instance.projectileManager.CreateProjectile(this.sprite, this.trajectory, where, target - where, this.speed, OnHit);
-        else 
+        else
             GameManager.Instance.projectileManager.CreateProjectile(this.sprite, this.trajectory, where, target - where, this.speed, OnHit, this.lifetime);
         yield return new WaitForEndOfFrame();
     }
@@ -88,11 +90,13 @@ public class Spell
         if (other.team != team)
         {
             int temp = this.damage;
-            this.damage = (UnityEngine.Random.Range(0,100) < this.crit)? this.damage * 6: this.damage;
+            this.damage = (UnityEngine.Random.Range(0, 100) < this.crit) ? this.damage * 6 : this.damage;
             other.Damage(new Damage(GetDamage(), Damage.Type.ARCANE));
             this.damage = temp;
         }
 
     }
+
+   
 
 }

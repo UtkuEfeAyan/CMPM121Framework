@@ -1,74 +1,130 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RewardScreenManager : MonoBehaviour
 {
+    // Existing references
     public GameObject rewardScreen;
     public TextMeshProUGUI rewardStatsText;
+    public SpellUI rewardSpellUI;
 
-    public SpellUI rewardSpellUI; // SpellUI prefab connected in the inspector
-    public GameObject spellChoicePanel; //a panel that holds spell slot buttons
-    private Spell rewardSpell;
-    private bool rewardGiven = false;
+    // New references
+    public SpellUI[] playerSpellSlots; // Assign your 4 spell slot buttons here
+    private Spell generatedRewardSpell;
+    private bool rewardPending;
 
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //  Automatically find the RewardStatsText by tag
-        GameObject statsObject = GameObject.FindGameObjectWithTag("RewardStatsText");
-        if (statsObject != null)
-        {
-            rewardStatsText = statsObject.GetComponent<TextMeshProUGUI>();
-        }
-        else
-        {
-            Debug.LogWarning("RewardStatsText with tag not found!");
-        }
-
-        if (rewardScreen != null)
-            rewardScreen.SetActive(false);
-
+        rewardScreen.SetActive(false);
+        InitializeSlots();
     }
 
-    // Update is called once per frame
+    void InitializeSlots()
+    {
+        foreach (var slot in playerSpellSlots)
+        {
+            var button = slot.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.AddListener(() => OnSlotSelected(slot));
+            }
+            else
+            {
+                Debug.LogError("Slot missing Button component: " + slot.name);
+            }
+        }
+    }
+
     void Update()
     {
-        //if (rewardStatsText != null)
-        //    Debug.Log("Stats Text: " + rewardStatsText.text);
-
         if (GameManager.Instance.state == GameManager.GameState.WAVEEND)
         {
-            rewardScreen.SetActive(true);
-            rewardStatsText.text =
-            "Waves survived:    " + GetWaveNumber() + "\n" +
-            "Time alive:        " + (GameManager.Instance.elapsedTime).ToString("F1") + " seconds\n" +
-            "Enemies killed:    " + GameManager.Instance.enemiesKilled + "\n" +
-            "Projectiles fired: " + GameManager.Instance.projectilesFired + "\n" +
-            "Wave score:        " + GameManager.Instance.waveScore;
-
-            // Generate reward spell
-            var playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-            if (!rewardGiven)
+            if (!rewardPending)
             {
-                rewardSpell = new SpellBuilder().Build(playerController.spellcaster);
-                rewardSpellUI.SetSpell(rewardSpell);
-                rewardGiven = true;
+                ShowRewardScreen();
+                rewardPending = true;
             }
-
         }
         else
         {
-            if (rewardScreen != null)
+            if (rewardScreen.activeSelf)
             {
-                rewardScreen.SetActive(false); // hide the screen during non-WAVEEND state
+                rewardScreen.SetActive(false);
+                CleanupSlots();
+                rewardPending = false;
             }
-        }        
+        }
     }
-    // we use the below code twice at minimum  can probavbl;y take it out  of  thes isntance and make one script called by multiple thigns
-    int GetWaveNumber()
+
+    void ShowRewardScreen()
     {
-        return (int)FindFirstObjectByType<EnemySpawner>().GetWave();
+        rewardScreen.SetActive(true);
+        generatedRewardSpell = new SpellBuilder().Build(
+            GameManager.Instance.player.GetComponent<PlayerController>().spellcaster
+        );
+        UpdateUI();
+        SetSlotsInteractable(true);
     }
+
+    void UpdateUI()
+    {
+        rewardStatsText.text = GetWaveStats();
+        rewardSpellUI.SetSpell(generatedRewardSpell);
+
+        // Update player spell slots
+        var spellcaster = GameManager.Instance.player.GetComponent<PlayerController>().spellcaster;
+        for (int i = 0; i < playerSpellSlots.Length; i++)
+        {
+            playerSpellSlots[i].SetSpell(i < spellcaster.spells.Count ? spellcaster.spells[i] : null);
+        }
+    }
+
+    void OnSlotSelected(SpellUI selectedSlot)
+    {
+        int slotIndex = System.Array.IndexOf(playerSpellSlots, selectedSlot);
+        if (slotIndex == -1) return;
+
+        var spellcaster = GameManager.Instance.player.GetComponent<PlayerController>().spellcaster;
+
+        // Replace or add spell
+        if (spellcaster.spells.Count > slotIndex)
+            spellcaster.spells[slotIndex] = generatedRewardSpell;
+        else
+            spellcaster.spells.Add(generatedRewardSpell);
+
+        UpdateUI();
+        SetSlotsInteractable(false);
+        rewardScreen.SetActive(false);
+        rewardPending = false;
+    }
+
+    void SetSlotsInteractable(bool interactable)
+    {
+        foreach (var slot in playerSpellSlots)
+        {
+            var button = slot.GetComponent<Button>();
+            if (button != null) button.interactable = interactable;
+        }
+    }
+
+    void CleanupSlots()
+    {
+        foreach (var slot in playerSpellSlots)
+        {
+            var button = slot.GetComponent<Button>();
+            if (button != null) button.onClick.RemoveAllListeners();
+        }
+    }
+
+    string GetWaveStats()
+    {
+        return $"Waves survived: {GetWaveNumber()}\n" +
+               $"Time alive: {GameManager.Instance.elapsedTime:F1}s\n" +
+               $"Enemies killed: {GameManager.Instance.enemiesKilled}\n" +
+               $"Projectiles fired: {GameManager.Instance.projectilesFired}\n" +
+               $"Wave score: {GameManager.Instance.waveScore}";
+    }
+
+    int GetWaveNumber() => (int)FindFirstObjectByType<EnemySpawner>().GetWave();
 }

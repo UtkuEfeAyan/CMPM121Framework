@@ -22,29 +22,30 @@ public class SpellUI : MonoBehaviour
         last_text_update = 0f;
     }
 
-    public void SetSpell(Spell spell)
-    {
-        if (spell == null || GameManager.Instance == null || GameManager.Instance.spellIconManager == null)
+    
+        public void SetSpell(Spell spell)
         {
-            Debug.LogWarning("SpellUI.SetSpell was given an invalid or incomplete spell.");
-            return;
+            currentSpell = spell;
+
+            // Add null checks
+            if (icon != null)
+            {
+                if (spell != null)
+                {
+                    icon.sprite = GameManager.Instance.spellIconManager.Get(spell.GetIcon());
+                    icon.enabled = true;
+                }
+                else
+                {
+                    icon.enabled = false;
+                }
+            }
+            else
+            {
+                Debug.LogError("Icon reference not set in SpellUI: " + gameObject.name);
+            }
+
         }
-
-        currentSpell = spell;
-
-        if (icon != null)
-        {
-            icon.enabled = true;
-            icon.sprite = GameManager.Instance.spellIconManager.Get(spell.GetIcon());
-        }
-
-        if (manacost != null)
-            manacost.text = spell.GetManaCost().ToString();
-
-        if (damage != null)
-            damage.text = spell.GetDamage().ToString();
-    }
-
     public void ClearSpell()
     {
         currentSpell = null;
