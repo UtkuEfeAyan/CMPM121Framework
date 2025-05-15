@@ -52,34 +52,60 @@ public class PlayerController : MonoBehaviour
             spellui.SetSpell(spellcaster.spells[0]);
     }
 
-        // Update is called once per frame
-        void Update()
-    {
-        if (GameManager.Instance.state == GameManager.GameState.PREGAME || GameManager.Instance.state == GameManager.GameState.GAMEOVER) return;
+    // Update is called once per frame
+    [Header("UI References")]
+    public SpellUI[] spellSlots; // Assign all 4 spell slots in Inspector
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+    void Update()
+    {
+        if (GameManager.Instance.state == GameManager.GameState.PREGAME ||
+            GameManager.Instance.state == GameManager.GameState.GAMEOVER) return;
+
+        int newIndex = -1;
+
+        if (Keyboard.current.digit1Key.wasPressedThisFrame) newIndex = 0;
+        else if (Keyboard.current.digit2Key.wasPressedThisFrame) newIndex = 1;
+        else if (Keyboard.current.digit3Key.wasPressedThisFrame) newIndex = 2;
+        else if (Keyboard.current.digit4Key.wasPressedThisFrame) newIndex = 3;
+
+        if (newIndex != -1)
         {
-            currentSpellIndex = 0;
-            GetComponent<SpellUIContainer>().UpdateHighlight(0);
-        }
-        else if (Keyboard.current.digit2Key.wasPressedThisFrame)
-        {
-            currentSpellIndex = 1;
-            GetComponent<SpellUIContainer>().UpdateHighlight(1);
-        }
-        else if (Keyboard.current.digit3Key.wasPressedThisFrame)
-        {
-            currentSpellIndex = 2;
-            GetComponent<SpellUIContainer>().UpdateHighlight(2);
-        }
-        else if (Keyboard.current.digit4Key.wasPressedThisFrame)
-        {
-            currentSpellIndex = 3;
-            GetComponent<SpellUIContainer>().UpdateHighlight(3);
+            UpdateSelectedSpell(newIndex);
         }
     }
 
-    void OnAttack(InputValue value)
+    void UpdateSelectedSpell(int index)
+    {
+        // Validate index range
+        if (index < 0 || index >= spellSlots.Length) return;
+
+        // Clear previous highlight
+        if (currentSpellIndex >= 0 && currentSpellIndex < spellSlots.Length)
+        {
+            spellSlots[currentSpellIndex].highlight.SetActive(false);
+        }
+
+        // Set new highlight
+        currentSpellIndex = index;
+        if (spellSlots[currentSpellIndex] != null)
+        {
+            spellSlots[currentSpellIndex].highlight.SetActive(true);
+        }
+    }
+
+    public void RefreshSpellDisplays()
+    {
+        if (spellcaster == null) return;
+
+        for (int i = 0; i < spellSlots.Length; i++)
+        {
+            bool hasSpell = i < spellcaster.spells.Count;
+            spellSlots[i].SetSpell(hasSpell ? spellcaster.spells[i] : null);
+        }
+
+    }
+
+        void OnAttack(InputValue value)
     {
         if (GameManager.Instance.state == GameManager.GameState.PREGAME || GameManager.Instance.state == GameManager.GameState.GAMEOVER) return;
 
@@ -90,6 +116,18 @@ public class PlayerController : MonoBehaviour
         if (spellcaster.spells != null && currentSpellIndex < spellcaster.spells.Count)
         {
             StartCoroutine(spellcaster.Cast(currentSpellIndex, transform.position, mouseWorld));
+        }
+
+        // Add null check and slot validation
+        if (spellcaster.spells != null &&
+            currentSpellIndex < spellcaster.spells.Count &&
+            spellcaster.spells[currentSpellIndex] != null)
+        {
+            StartCoroutine(spellcaster.Cast(currentSpellIndex, transform.position, mouseWorld));
+        }
+        else
+        {
+            Debug.Log("No spell in selected slot: " + currentSpellIndex);
         }
     }
 

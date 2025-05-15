@@ -22,29 +22,36 @@ public class SpellUI : MonoBehaviour
         last_text_update = 0f;
     }
 
-    public void SetSpell(Spell spell)
-    {
-        if (spell == null || GameManager.Instance == null || GameManager.Instance.spellIconManager == null)
+    
+        public void SetSpell(Spell spell)
         {
-            Debug.LogWarning("SpellUI.SetSpell was given an invalid or incomplete spell.");
-            return;
+            currentSpell = spell;
+
+
+
+        //  null checks
+        if (icon == null)
+        {
+            icon = GetComponentInChildren<Image>();
+            Debug.LogWarning("Auto-fetched icon reference on " + gameObject.name);
         }
 
-        currentSpell = spell;
-
+        //  null checks
         if (icon != null)
         {
-            icon.enabled = true;
-            icon.sprite = GameManager.Instance.spellIconManager.Get(spell.GetIcon());
+            if (spell != null && GameManager.Instance.spellIconManager != null)
+            {
+                icon.sprite = GameManager.Instance.spellIconManager.Get(spell.GetIcon());
+                icon.enabled = true;
+            }
+            else
+            {
+                icon.sprite = null;
+                icon.enabled = false;
+            }
         }
 
-        if (manacost != null)
-            manacost.text = spell.GetManaCost().ToString();
-
-        if (damage != null)
-            damage.text = spell.GetDamage().ToString();
     }
-
     public void ClearSpell()
     {
         currentSpell = null;
@@ -94,7 +101,12 @@ public class SpellUI : MonoBehaviour
     void Update()
     {
         if (currentSpell == null)
+        {
+            if (cooldown != null)
+                cooldown.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 0);
             return;
+        }
+
 
         if (Time.time > last_text_update + UPDATE_DELAY)
         {

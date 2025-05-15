@@ -12,35 +12,58 @@ public class SpellUIContainer : MonoBehaviour
         UpdateHighlight(0); // Start on spell 0
     }
 
-    public void RefreshAllSpells()
+    public void UpdateHighlight(int selectedIndex)
     {
-        for (int i = 1; i < spellUIs.Length; i++)
+        // Validate array bounds first
+        if (selectedIndex < 0 || selectedIndex >= spellUIs.Length)
         {
-            spellUIs[i].SetActive(true); // Always show the slot
+            Debug.LogWarning($"Invalid spell index: {selectedIndex}");
+            return;
+        }
 
-            if (i < player.spellcaster.spells.Count)
+        // Clear previous highlight
+        if (lastHighlight >= 0 && lastHighlight < spellUIs.Length)
+        {
+            var previousHighlight = spellUIs[lastHighlight]?.GetComponent<SpellUI>()?.highlight;
+            if (previousHighlight != null)
             {
-                spellUIs[i].GetComponent<SpellUI>().SetSpell(player.spellcaster.spells[i]);
+                previousHighlight.SetActive(false);
+            }
+        }
+
+        // Set new highlight
+        var newHighlight = spellUIs[selectedIndex]?.GetComponent<SpellUI>();
+        if (newHighlight != null)
+        {
+            if (newHighlight.highlight != null)
+            {
+                newHighlight.highlight.SetActive(true);
+                lastHighlight = selectedIndex;
             }
             else
             {
-                spellUIs[i].GetComponent<SpellUI>().ClearSpell(); // Show as empty
+                Debug.LogWarning($"No highlight object on spell slot {selectedIndex}");
             }
         }
+        else
+        {
+            Debug.LogWarning($"Missing SpellUI component on slot {selectedIndex}");
+        }
     }
 
-    public void UpdateHighlight(int selectedIndex)
+    public void RefreshAllSpells()
     {
-        if (lastHighlight >= 0 && lastHighlight < spellUIs.Length)
+        // Changed to start from 0 and handle nulls
+        for (int i = 0; i < spellUIs.Length; i++)
         {
-            spellUIs[lastHighlight].GetComponent<SpellUI>().highlight.SetActive(false);
-        }
+            spellUIs[i].SetActive(true);
+            bool hasSpell = i < player.spellcaster.spells.Count &&
+                           player.spellcaster.spells[i] != null;
 
-        if (selectedIndex >= 0 && selectedIndex < spellUIs.Length)
-        {
-            spellUIs[selectedIndex].GetComponent<SpellUI>().highlight.SetActive(true);
-            lastHighlight = selectedIndex;
+            spellUIs[i].GetComponent<SpellUI>().SetSpell(hasSpell ? player.spellcaster.spells[i] : null);
         }
     }
+
+
 
 }
