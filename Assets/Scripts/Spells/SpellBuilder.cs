@@ -89,7 +89,7 @@ public class SpellBuilder
 
     public SpellBuilder()
     {        
-        spells = JSONParser.Instance.LoadAsDictionary<string, SpellData>("spells");
+        spells = JSONParser.LoadAsDictionary<string, SpellData>("spells");
         modSpellIds = new List<string>();
         spellIds = new List<string>();
         foreach (string spellID in spells.Keys){

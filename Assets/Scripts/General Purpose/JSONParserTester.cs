@@ -20,7 +20,7 @@ public class JSONParserTester : MonoBehaviour
 
     private void TestEnemyLoading()
     {
-        var enemies = JSONParser.Instance.LoadAsList<EnemyData>("enemies");
+        var enemies = JSONParser.LoadAsList<EnemyData>("enemies");
 
         if (enemies == null)
         {
@@ -37,7 +37,7 @@ public class JSONParserTester : MonoBehaviour
 
     private void TestLevelLoading()
     {
-        var levels = JSONParser.Instance.LoadAsList<LevelData>("levels");
+        var levels = JSONParser.LoadAsList<LevelData>("levels");
 
         if (levels == null)
         {
@@ -58,7 +58,7 @@ public class JSONParserTester : MonoBehaviour
 
     private void TestSpellLoading()
     {
-        var spells = JSONParser.Instance.LoadAsDictionary<string, SpellData>("spells");
+        var spells = JSONParser.LoadAsDictionary<string, SpellData>("spells");
         
         if (spells == null)
         {

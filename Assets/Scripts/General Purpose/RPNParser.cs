@@ -4,17 +4,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class RPNParser 
+public static class RPNParser 
 {
-    private static RPNParser theInstance;
-    public static RPNParser Instance {  get
-        {
-            if (theInstance == null)
-                theInstance = new RPNParser();
-            return theInstance;
-        }
-    }
-    public float DoParse(string str, Dictionary<string, float> variables = null)
+    public static float DoParse(string str, Dictionary<string, float> variables = null)
     {
         Stack<float> stack = new Stack<float>();
         //super wasteful memory-wise but uh :)

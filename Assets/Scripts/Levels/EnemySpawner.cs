@@ -28,7 +28,7 @@ public class EnemySpawner : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        levelsJSON = JSONParser.Instance.LoadAsList<LevelData>("levels");
+        levelsJSON = JSONParser.LoadAsList<LevelData>("levels");
         int i = 0;
         int denominator = (levelsJSON.Count-1);
         if  (denominator == 0){
@@ -43,7 +43,7 @@ public class EnemySpawner : MonoBehaviour
             i ++;
         }
 
-        enemiesJSON = JSONParser.Instance.LoadAsList<EnemyData>("enemies");
+        enemiesJSON = JSONParser.LoadAsList<EnemyData>("enemies");
         waveNum = 0;
         GameManager.Instance.enemySpawner = this;
     }
@@ -56,7 +56,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void StartLevel(string levelname)
     {
-        //var levelsJSON = JSONParser.Instance.LoadAsList<LevelData>("levels");
+        //var levelsJSON = JSONParser.LoadAsList<LevelData>("levels");
         foreach (var iter in levelsJSON){
             if (iter.name == levelname)
                 levelJSON = iter;
@@ -113,13 +113,13 @@ public class EnemySpawner : MonoBehaviour
             temp.sequence   = enemyDisc.sequence ?? tempList;
             temp.location   = enemyDisc.location ?? "random";
             //handle spawn sequence
-            float spawnNum = RPNParser.Instance.DoParse(temp.count,new Dictionary<string, float>{{ "wave", waveNum }});
+            float spawnNum = RPNParser.DoParse(temp.count,new Dictionary<string, float>{{ "wave", waveNum }});
             for (int j = 0; spawnNum > 0; j++){
                 for (int i = 0; (spawnNum > 0) && (i < temp.sequence[j%temp.sequence.Count]); i ++){
                     yield return SpawnEnemies(temp);
                     spawnNum --;
                 }
-                yield return new WaitForSeconds(RPNParser.Instance.DoParse(temp.delay));
+                yield return new WaitForSeconds(RPNParser.DoParse(temp.delay));
             }
         }
         yield return new WaitWhile(() => GameManager.Instance.enemy_count > 0);
@@ -144,9 +144,9 @@ public class EnemySpawner : MonoBehaviour
         new_enemy.transform.position = MySpawns[Random.Range(0, MySpawns.Count)].transform.position + new Vector3(offset.x, offset.y, 0);
 
         EnemyController en = new_enemy.GetComponent<EnemyController>();
-        en.hp = new Hittable(RPNParser.Instance.DoParse(data.hp, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.hp.hp}}), Hittable.Team.MONSTERS, new_enemy);
-        en.speed = RPNParser.Instance.DoParse(data.speed, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.speed}});
-        en.damage = RPNParser.Instance.DoParse(data.damage, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.damage}});
+        en.hp = new Hittable(RPNParser.DoParse(data.hp, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.hp.hp}}), Hittable.Team.MONSTERS, new_enemy);
+        en.speed = RPNParser.DoParse(data.speed, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.speed}});
+        en.damage = RPNParser.DoParse(data.damage, new Dictionary<string, float>{{ "wave", waveNum }, {"base", en.damage}});
         GameManager.Instance.AddEnemy(new_enemy);
         yield return new WaitForSeconds(0.5f);
     }
